@@ -1,0 +1,9 @@
+.box {
+	width: 10rem;
+	height: 10rem;
+	background-color: rgba(255, 0, 0, .2);
+}
+
+.box.dragging {
+	background-color: rgba(255, 0, 0, .5);
+}
