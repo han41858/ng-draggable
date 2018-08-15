@@ -3,12 +3,16 @@ import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
 
+import { DraggableModule } from '../../projects/draggable/src/lib/draggable.module';
+
 @NgModule({
 	declarations : [
 		AppComponent
 	],
 	imports : [
-		BrowserModule
+		BrowserModule,
+
+		DraggableModule
 	],
 	providers : [],
 	bootstrap : [AppComponent]
