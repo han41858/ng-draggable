@@ -7,3 +7,9 @@
 .box.dragging {
 	background-color: rgba(255, 0, 0, .5);
 }
+
+.area {
+	width: 30rem;
+	height: 15rem;
+	background-color: rgba(0, 255, 0, .1);
+}

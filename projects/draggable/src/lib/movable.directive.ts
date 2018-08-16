@@ -1,4 +1,5 @@
-import { Directive, HostBinding, HostListener, Input } from '@angular/core';
+import { Directive, ElementRef, HostBinding, HostListener, Input } from '@angular/core';
+
 import { DraggableDirective } from './draggable.directive';
 
 interface Position {
@@ -14,7 +15,11 @@ export class MovableDirective extends DraggableDirective {
 	@Input() reset : boolean = true;
 
 	private startPosition : Position = { x : 0, y : 0 };
-	private position : Position = { x : 0, y : 0 };
+	public position : Position = { x : 0, y : 0 };
+
+	constructor (public ele : ElementRef) {
+		super();
+	}
 
 	@HostBinding('style.transform') get transform () : string {
 		return `translate(${this.position.x}px, ${this.position.y}px)`;
