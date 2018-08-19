@@ -3,13 +3,7 @@ import { AfterContentInit, ContentChildren, Directive, ElementRef, QueryList } f
 import { Subscription } from 'rxjs';
 
 import { MovableDirective } from './movable.directive';
-
-interface Boundaries {
-	minX : number;
-	maxX : number;
-	minY : number;
-	maxY : number;
-}
+import { Position } from './interfaces';
 
 @Directive({
 	selector : '[ngMovableArea]'
@@ -19,7 +13,6 @@ export class MovableAreaDirective implements AfterContentInit {
 	@ContentChildren(MovableDirective) movables : QueryList<MovableDirective>;
 
 	private subscriptions : Subscription[] = [];
-	private boundaries : Boundaries;
 
 	constructor (private ele : ElementRef) {
 	}
@@ -31,42 +24,25 @@ export class MovableAreaDirective implements AfterContentInit {
 			this.subscriptions = [];
 
 			this.movables.forEach(movable => {
-				this.subscriptions.push(movable.dragStart.subscribe(() => this.checkBoundaries(movable)));
-				this.subscriptions.push(movable.dragMove.subscribe(() => this.restrictBoundaries(movable)));
+				this.subscriptions.push(movable.dragStart.subscribe(() => this.setBoundaries(movable)));
 			});
 		});
 
 		this.movables.notifyOnChanges();
 	}
 
-	checkBoundaries (movable : MovableDirective) {
+	setBoundaries (movable : MovableDirective) {
 		const areaRect : DOMRect = this.ele.nativeElement.getBoundingClientRect();
-		const movableRect : DOMRect = movable.ele.nativeElement.getBoundingClientRect();
 
-		this.boundaries = {
-			minX : areaRect.left - movableRect.left + movable.position.x,
-			maxX : areaRect.right - movableRect.right + movable.position.x,
-			minY : areaRect.top - movableRect.top + movable.position.y,
-			maxY : areaRect.bottom - movableRect.bottom + movable.position.y
-		};
-	}
+		const movableRect : DOMRect = movable.getBoundingClientRect();
+		const movablePosition : Position = movable.getPosition();
 
-	restrictBoundaries (movable : MovableDirective) {
-		if (movable.position.x < this.boundaries.minX) {
-			movable.position.x = this.boundaries.minX;
-		}
-
-		if (movable.position.x > this.boundaries.maxX) {
-			movable.position.x = this.boundaries.maxX;
-		}
-
-		if (movable.position.y < this.boundaries.minY) {
-			movable.position.y = this.boundaries.minY;
-		}
-
-		if (movable.position.y > this.boundaries.maxY) {
-			movable.position.y = this.boundaries.maxY;
-		}
+		movable.setBoundaries({
+			minX : areaRect.left - movableRect.left + movablePosition.x,
+			maxX : areaRect.right - movableRect.right + movablePosition.x,
+			minY : areaRect.top - movableRect.top + movablePosition.y,
+			maxY : areaRect.bottom - movableRect.bottom + movablePosition.y
+		});
 	}
 
 }
