@@ -24,7 +24,7 @@ export class MovableDirective extends DraggableDirective {
 	}
 
 	@HostListener('dragStart', ['$event'])
-	onDragStart (event : PointerEvent) {
+	onDragStart (event : DragEvent) {
 		this.startPosition = {
 			x : event.clientX - this.position.x,
 			y : event.clientY - this.position.y
@@ -32,12 +32,12 @@ export class MovableDirective extends DraggableDirective {
 	}
 
 	@HostListener('dragMove', ['$event'])
-	onDragMove (event : PointerEvent) {
+	onDragMove (event : DragEvent) {
 		const newPosition = {
 			x : event.clientX - this.startPosition.x,
 			y : event.clientY - this.startPosition.y
 		};
-
+		
 		if (!!this.boundaries) {
 			// boundaries modification
 			if (newPosition.x < this.boundaries.minX) {
@@ -61,7 +61,7 @@ export class MovableDirective extends DraggableDirective {
 	}
 
 	@HostListener('dragEnd', ['$event'])
-	onDragEnd (event : PointerEvent) {
+	onDragEnd (event : DragEvent) {
 		if (this.reset) {
 			this.position = {
 				x : 0,

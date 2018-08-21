@@ -9,3 +9,13 @@ export interface Boundaries {
 	minY : number;
 	maxY : number;
 }
+
+export interface DragEvent {
+	clientX : number;
+	clientY : number;
+}
+
+export interface SortEvent {
+	currentIndex : number;
+	newIndex : number;
+}
