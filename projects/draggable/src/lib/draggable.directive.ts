@@ -61,10 +61,18 @@ export class DraggableDirective {
 		else {
 			const touch : Touch = event.touches.item(0);
 
-			dragEvent = {
-				clientX : touch.clientX,
-				clientY : touch.clientY
-			};
+			if (!!touch) {
+				dragEvent = {
+					clientX : touch.clientX,
+					clientY : touch.clientY
+				};
+			}
+			else {
+				dragEvent = {
+					clientX : 0,
+					clientY : 0
+				};
+			}
 		}
 
 		return dragEvent;
