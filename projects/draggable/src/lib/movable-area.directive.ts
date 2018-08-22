@@ -12,9 +12,9 @@ export class MovableAreaDirective implements AfterContentInit {
 
 	@ContentChildren(MovableDirective) movables : QueryList<MovableDirective>;
 
-	private subscriptions : Subscription[] = [];
+	protected subscriptions : Subscription[] = [];
 
-	constructor (private ele : ElementRef) {
+	constructor (protected ele : ElementRef) {
 	}
 
 	ngAfterContentInit () {

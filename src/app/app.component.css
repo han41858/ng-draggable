@@ -13,3 +13,16 @@
 	height: 15rem;
 	background-color: rgba(0, 255, 0, .1);
 }
+
+.area.horizontal {
+	width: 46rem;
+	height: 10rem;
+
+	display: flex;
+	justify-content: space-between;
+}
+
+.area.vertical {
+	width: 10rem;
+	height: 46rem;
+}
