@@ -82,4 +82,8 @@ export class MovableDirective extends DraggableDirective {
 		this.boundaries = boundaries;
 	}
 
+	get nativeElement () : HTMLElement {
+		return this.ele.nativeElement;
+	}
+
 }

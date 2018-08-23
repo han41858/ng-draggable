@@ -27,7 +27,20 @@ export class MovableAreaDirective implements AfterContentInit {
 			this.subscriptions = [];
 
 			this.movables.forEach(movable => {
-				this.subscriptions.push(movable.dragStart.subscribe(() => this.setBoundaries(movable)));
+				this.subscriptions.push(
+					movable.dragStart.subscribe(() => {
+						this.setBoundaries(movable);
+
+						if (!!this.helper) {
+							this.helper.onDragStart(movable);
+						}
+					}),
+					movable.dragEnd.subscribe(() => {
+						if (!!this.helper) {
+							this.helper.onDragEnd();
+						}
+					})
+				);
 			});
 		});
 
