@@ -46,17 +46,14 @@ export class MovableHelperDirective implements OnInit, OnDestroy {
 
 			this.rootEle = this.overlayRef.overlayElement;
 
-			const position : DOMRect = movable.getBoundingClientRect();
-			console.warn('rect position :', position);
+			const rectPosition : DOMRect = movable.getBoundingClientRect();
 
 			this.startPosition = {
-				// x : position.x - this.position.x,
-				x : position.x,
-				// y : position.y - this.position.y
-				y : position.y
+				x : rectPosition.x,
+				y : rectPosition.y
 			};
 
-			// this.setPosition(this.startPosition);
+			this.setPosition(this.startPosition);
 
 			const cloneEle : HTMLElement = movable.nativeElement.cloneNode(true) as HTMLElement;
 
@@ -80,8 +77,8 @@ export class MovableHelperDirective implements OnInit, OnDestroy {
 		console.log('onDragMove()', event, boundaries);
 
 		const newPosition = {
-			x : event.clientX - this.startPosition.x,
-			y : event.clientY - this.startPosition.y
+			x : event.movementX - this.startPosition.x,
+			y : event.movementY - this.startPosition.y
 		};
 
 		if (!!boundaries) {
@@ -105,17 +102,17 @@ export class MovableHelperDirective implements OnInit, OnDestroy {
 
 		this.position = newPosition;
 
-		this.setPosition(this.position);
+		// this.setPosition(this.position);
 	}
 
 	onDragEnd () {
 		console.log('onDragEnd()');
 
-		// if (this.overlayRef.hasAttached()) {
-		// 	this.rootEle.innerHTML = '';
-		//
-		// 	this.overlayRef.detach();
-		// }
+		if (this.overlayRef.hasAttached()) {
+			this.rootEle.innerHTML = '';
+
+			this.overlayRef.detach();
+		}
 	}
 
 }

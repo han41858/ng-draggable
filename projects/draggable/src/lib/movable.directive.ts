@@ -1,4 +1,4 @@
-import { ContentChild, Directive, ElementRef, HostListener, Input } from '@angular/core';
+import { ContentChild, Directive, ElementRef, HostListener, Input, NgZone } from '@angular/core';
 
 import { DraggableDirective } from './draggable.directive';
 import { MovableHelperDirective } from './movable-helper.directive';
@@ -16,8 +16,8 @@ export class MovableDirective extends DraggableDirective {
 
 	private boundaries : Boundaries;
 
-	constructor (private ele : ElementRef) {
-		super();
+	constructor (ele : ElementRef) {
+		super(ele);
 	}
 
 	@HostListener('dragStart', ['$event'])
@@ -50,16 +50,8 @@ export class MovableDirective extends DraggableDirective {
 		}
 	}
 
-	getBoundingClientRect () : DOMRect {
-		return this.ele.nativeElement.getBoundingClientRect();
-	}
-
 	setBoundaries (boundaries : Boundaries) {
 		this.boundaries = boundaries;
-	}
-
-	get nativeElement () : HTMLElement {
-		return this.ele.nativeElement;
 	}
 
 }
