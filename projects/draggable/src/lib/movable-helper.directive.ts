@@ -3,7 +3,7 @@ import { GlobalPositionStrategy, Overlay, OverlayRef } from '@angular/cdk/overla
 import { TemplatePortal } from '@angular/cdk/portal';
 
 import { MovableDirective } from './movable.directive';
-
+import { Boundaries, DragEvent, Position } from './interfaces';
 
 @Directive({
 	selector : '[ngMovableHelper]'
@@ -11,8 +11,15 @@ import { MovableDirective } from './movable.directive';
 export class MovableHelperDirective implements OnInit, OnDestroy {
 
 	private overlayRef : OverlayRef;
+	private rootEle : HTMLElement;
 
-	constructor (private overlay : Overlay, private templateRef : TemplateRef<any>, private viewContainerRef : ViewContainerRef) {
+	private startPosition : Position = { x : 0, y : 0 };
+	private position : Position = { x : 0, y : 0 };
+
+	constructor (
+		private overlay : Overlay,
+		private templateRef : TemplateRef<any>,
+		private viewContainerRef : ViewContainerRef) {
 	}
 
 	ngOnInit () {
@@ -31,24 +38,84 @@ export class MovableHelperDirective implements OnInit, OnDestroy {
 		if (!this.overlayRef.hasAttached()) {
 			this.overlayRef.attach(new TemplatePortal(this.templateRef, this.viewContainerRef));
 
-			const rootEle = this.overlayRef.overlayElement;
+			const overlayContainer : HTMLElement = this.overlayRef.hostElement;
 
-			rootEle.appendChild(movable.nativeElement.cloneNode(true));
+			overlayContainer.style.position = 'absolute';
+			overlayContainer.style.left = '0';
+			overlayContainer.style.top = '0';
+
+			this.rootEle = this.overlayRef.overlayElement;
+
+			const position : DOMRect = movable.getBoundingClientRect();
+			console.warn('rect position :', position);
+
+			this.startPosition = {
+				// x : position.x - this.position.x,
+				x : position.x,
+				// y : position.y - this.position.y
+				y : position.y
+			};
+
+			// this.setPosition(this.startPosition);
+
+			const cloneEle : HTMLElement = movable.nativeElement.cloneNode(true) as HTMLElement;
+
+			const classNames : string[] = cloneEle.className.split(' ');
+			classNames.push('dragging');
+			cloneEle.className = classNames.join(' ');
+
+			this.rootEle.appendChild(cloneEle);
 		}
 	}
 
-	onDragMove () {
-		console.log('onDragMove()');
+	private setPosition (position : Position) {
+		console.warn('setPosition()', position);
+
+		if (!!this.rootEle) {
+			this.rootEle.style.transform = `translate(${position.x}px, ${position.y}px)`;
+		}
+	}
+
+	onDragMove (event : DragEvent, boundaries : Boundaries) {
+		console.log('onDragMove()', event, boundaries);
+
+		const newPosition = {
+			x : event.clientX - this.startPosition.x,
+			y : event.clientY - this.startPosition.y
+		};
+
+		if (!!boundaries) {
+			// boundaries modification
+			if (newPosition.x < boundaries.minX) {
+				newPosition.x = boundaries.minX;
+			}
+
+			if (newPosition.x > boundaries.maxX) {
+				newPosition.x = boundaries.maxX;
+			}
+
+			if (newPosition.y < boundaries.minY) {
+				newPosition.y = boundaries.minY;
+			}
+
+			if (newPosition.y > boundaries.maxY) {
+				newPosition.y = boundaries.maxY;
+			}
+		}
+
+		this.position = newPosition;
+
+		this.setPosition(this.position);
 	}
 
 	onDragEnd () {
-		console.log('onDragEnd()', this.overlayRef.hasAttached());
+		console.log('onDragEnd()');
 
-		if (this.overlayRef.hasAttached()) {
-			this.overlayRef.overlayElement.innerHTML = '';
-
-			this.overlayRef.detach();
-		}
+		// if (this.overlayRef.hasAttached()) {
+		// 	this.rootEle.innerHTML = '';
+		//
+		// 	this.overlayRef.detach();
+		// }
 	}
 
 }

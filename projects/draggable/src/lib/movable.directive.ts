@@ -1,17 +1,18 @@
-import { Directive, ElementRef, HostBinding, HostListener, Input } from '@angular/core';
+import { ContentChild, Directive, ElementRef, HostListener, Input } from '@angular/core';
 
 import { DraggableDirective } from './draggable.directive';
-import { Boundaries, Position } from './interfaces';
+import { MovableHelperDirective } from './movable-helper.directive';
+import { Boundaries } from './interfaces';
+
 
 @Directive({
 	selector : '[ngMovable]'
 })
 export class MovableDirective extends DraggableDirective {
 
-	@Input() reset : boolean = true;
+	@ContentChild(MovableHelperDirective) helper : MovableHelperDirective;
 
-	private startPosition : Position = { x : 0, y : 0 };
-	private position : Position = { x : 0, y : 0 };
+	@Input() reset : boolean = true;
 
 	private boundaries : Boundaries;
 
@@ -19,59 +20,34 @@ export class MovableDirective extends DraggableDirective {
 		super();
 	}
 
-	@HostBinding('style.transform') get transform () : string {
-		return `translate(${this.position.x}px, ${this.position.y}px)`;
-	}
-
 	@HostListener('dragStart', ['$event'])
 	onDragStart (event : DragEvent) {
-		this.startPosition = {
-			x : event.clientX - this.position.x,
-			y : event.clientY - this.position.y
-		};
+		console.warn('onDragStart()', event);
+
+		if (!!this.helper) {
+			this.helper.onDragStart(this);
+		}
 	}
 
 	@HostListener('dragMove', ['$event'])
 	onDragMove (event : DragEvent) {
-		const newPosition = {
-			x : event.clientX - this.startPosition.x,
-			y : event.clientY - this.startPosition.y
-		};
-
-		if (!!this.boundaries) {
-			// boundaries modification
-			if (newPosition.x < this.boundaries.minX) {
-				newPosition.x = this.boundaries.minX;
-			}
-
-			if (newPosition.x > this.boundaries.maxX) {
-				newPosition.x = this.boundaries.maxX;
-			}
-
-			if (newPosition.y < this.boundaries.minY) {
-				newPosition.y = this.boundaries.minY;
-			}
-
-			if (newPosition.y > this.boundaries.maxY) {
-				newPosition.y = this.boundaries.maxY;
-			}
+		if (!!this.helper) {
+			this.helper.onDragMove(event, this.boundaries);
 		}
-
-		this.position = newPosition;
 	}
 
 	@HostListener('dragEnd', ['$event'])
 	onDragEnd (event : DragEvent) {
-		if (this.reset) {
-			this.position = {
-				x : 0,
-				y : 0
-			};
-		}
-	}
+		// if (this.reset) {
+		// 	this.position = {
+		// 		x : 0,
+		// 		y : 0
+		// 	};
+		// }
 
-	getPosition () : Position {
-		return this.position;
+		if (!!this.helper) {
+			this.helper.onDragEnd();
+		}
 	}
 
 	getBoundingClientRect () : DOMRect {
