@@ -1,8 +1,9 @@
-import { AfterContentInit, ContentChildren, Directive, ElementRef, QueryList } from '@angular/core';
+import { AfterContentInit, ContentChild, ContentChildren, Directive, ElementRef, QueryList } from '@angular/core';
 
 import { Subscription } from 'rxjs';
 
 import { MovableDirective } from './movable.directive';
+import { MovableHelperDirective } from './movable-helper.directive';
 import { Position } from './interfaces';
 
 @Directive({
@@ -11,6 +12,8 @@ import { Position } from './interfaces';
 export class MovableAreaDirective implements AfterContentInit {
 
 	@ContentChildren(MovableDirective) movables : QueryList<MovableDirective>;
+
+	@ContentChild(MovableHelperDirective) helper : MovableHelperDirective;
 
 	protected subscriptions : Subscription[] = [];
 

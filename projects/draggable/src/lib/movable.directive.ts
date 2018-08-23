@@ -1,13 +1,12 @@
-import { AfterContentInit, ContentChild, Directive, ElementRef, HostBinding, HostListener, Input } from '@angular/core';
+import { Directive, ElementRef, HostBinding, HostListener, Input } from '@angular/core';
 
 import { DraggableDirective } from './draggable.directive';
 import { Boundaries, Position } from './interfaces';
-import { MovableHelperDirective } from './movable-helper.directive';
 
 @Directive({
 	selector : '[ngMovable]'
 })
-export class MovableDirective extends DraggableDirective implements AfterContentInit{
+export class MovableDirective extends DraggableDirective {
 
 	@Input() reset : boolean = true;
 
@@ -16,21 +15,8 @@ export class MovableDirective extends DraggableDirective implements AfterContent
 
 	private boundaries : Boundaries;
 
-	@ContentChild(MovableHelperDirective) helper : MovableHelperDirective;
-
 	constructor (private ele : ElementRef) {
 		super();
-		
-		setInterval(() => {
-			console.warn('this.helper :', this.helper);
-		}, 1000);
-	}
-
-	ngAfterContentInit(){
-		setTimeout(() => {
-			console.warn(this.helper);
-		})
-
 	}
 
 	@HostBinding('style.transform') get transform () : string {
@@ -39,20 +25,14 @@ export class MovableDirective extends DraggableDirective implements AfterContent
 
 	@HostListener('dragStart', ['$event'])
 	onDragStart (event : DragEvent) {
-		console.warn(this.helper);
 		this.startPosition = {
 			x : event.clientX - this.position.x,
 			y : event.clientY - this.position.y
 		};
-
-		if(!!this.helper){
-			this.helper.onDragStart();
-		}
 	}
 
 	@HostListener('dragMove', ['$event'])
 	onDragMove (event : DragEvent) {
-		console.warn(this.helper);
 		const newPosition = {
 			x : event.clientX - this.startPosition.x,
 			y : event.clientY - this.startPosition.y
@@ -78,10 +58,6 @@ export class MovableDirective extends DraggableDirective implements AfterContent
 		}
 
 		this.position = newPosition;
-
-		if(!!this.helper){
-			this.helper.onDragMove();
-		}
 	}
 
 	@HostListener('dragEnd', ['$event'])
@@ -91,10 +67,6 @@ export class MovableDirective extends DraggableDirective implements AfterContent
 				x : 0,
 				y : 0
 			};
-		}
-
-		if(!!this.helper){
-			this.helper.onDragEnd();
 		}
 	}
 
