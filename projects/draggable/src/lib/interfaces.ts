@@ -10,11 +10,6 @@ export interface Boundaries {
 	maxY : number;
 }
 
-export interface DragSnapshot {
-	position : Position;
-	target : HTMLElement;
-}
-
 export interface DragInfo {
 	start : Position;
 	current : Position;

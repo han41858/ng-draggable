@@ -6,30 +6,62 @@
 </div>
 
 <ol>
-	<li>
-		<p>[ngDraggable] : detect drag</p>
+	<!--<li>-->
+	<!--<p>[ngDraggable] : detect drag</p>-->
 
-		<div class="box" ngDraggable></div>
-	</li>
-
-	<li>
-		<p>[ngMovable] : enable move, [reset]="true" default</p>
-
-		<div class="box" ngMovable></div>
-	</li>
+	<!--<div class="box" ngDraggable></div>-->
+	<!--</li>-->
 
 	<li>
-		<p>[ngMovable] : enable move, [reset]="false"</p>
+		<p>[ngMovable] & [ngMovableHelper] : enable move, [reset]="true" default</p>
 
-		<div class="box" ngMovable [reset]="false"></div>
-	</li>
-
-	<li>
-		<p>[ngMovableArea] : restricted area of movable object</p>
-
-		<div class="area" ngMovableArea>
-			<div class="box" ngMovable [reset]="false"></div>
+		<div class="box" ngMovable>
+			<ng-template *ngMovableHelper></ng-template>
 		</div>
 	</li>
+
+	<li>
+		<p>[ngMovable] & [ngMovableHelper] : enable move, [reset]="false"</p>
+
+		<div class="box" ngMovable [reset]="false">
+			<ng-template *ngMovableHelper></ng-template>
+		</div>
+	</li>
+
+	<!--<li>-->
+	<!--<p>[ngMovableArea] : restricted area of movable object</p>-->
+
+	<!--<div class="area" ngMovableArea>-->
+	<!--<div class="box" ngMovable [reset]="false"></div>-->
+	<!--</div>-->
+	<!--</li>-->
+
+	<!--<li>-->
+	<!--<p>[ngMovableArea]</p>-->
+	<!---->
+	<!--<div class="area" ngMovableArea>-->
+	<!--<div class="box" ngMovable [reset]="false"></div>-->
+	<!--</div>-->
+	<!--</li>-->
+
+	<!--<li>-->
+	<!--<p>[ngSortable] : sortable list</p>-->
+
+	<!--<ul>-->
+	<!--<li>-->
+	<!--<p>horizontal</p>-->
+
+	<!--<div class="area horizontal" ngSortableArea (sort)="sort($event)">-->
+	<!--<div class="box" ngMovable *ngFor="let box of sortableList">-->
+	<!--<span>{{ box }}</span>-->
+	<!--</div>-->
+	<!--</div>-->
+	<!--</li>-->
+
+	<!--<li>-->
+	<!--<p>vertical</p>-->
+	<!--</li>-->
+	<!--</ul>-->
+	<!--</li>-->
 </ol>
 

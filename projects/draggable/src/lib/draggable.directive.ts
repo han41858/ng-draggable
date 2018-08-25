@@ -1,10 +1,9 @@
 import { Directive, ElementRef, EventEmitter, HostBinding, OnInit, Output } from '@angular/core';
 
-import { fromEvent } from 'rxjs';
-import { filter, map, tap } from 'rxjs/operators';
+import { fromEvent, merge, Observable } from 'rxjs';
+import { filter, tap, withLatestFrom } from 'rxjs/operators';
 
-import { DragEvent, DragInfo, DragSnapshot } from './interfaces';
-
+import { DragEvent, DragInfo } from './interfaces';
 
 @Directive({
 	selector : '[ngDraggable]'
@@ -20,116 +19,93 @@ export class DraggableDirective implements OnInit {
 	// set css class
 	@HostBinding('class.dragging') isDragging : boolean = false;
 
-	private dragInfo : DragInfo;
-
 	constructor (private ele : ElementRef) {
 	}
 
 	ngOnInit () {
-		this.connectMouseEvent(); // for desktop
-		this.connectTouchEvent(); // for mobile
-	}
+		// for desktop
+		const mouseDown$ : Observable<MouseEvent> = fromEvent(this.ele.nativeElement, 'mousedown');
+		const mouseMove$ : Observable<MouseEvent> = fromEvent(document, 'mousemove') as Observable<MouseEvent>;
+		const mouseUp$ : Observable<MouseEvent> = fromEvent(document, 'mouseup') as Observable<MouseEvent>;
 
-	private connectMouseEvent () {
-		// divided to set class
-		// mouse down
-		fromEvent(this.ele.nativeElement, 'mousedown')
-			.pipe(
-				map<MouseEvent, DragSnapshot>(event => this.convertMouseEventToDragSnapshot(event))
-			)
-			.subscribe((snapshot : DragSnapshot) => {
-				this.isDragging = true;
+		// for mobile
+		const touchStart$ : Observable<TouchEvent> = fromEvent(this.ele.nativeElement, 'touchstart');
+		const touchMove$ : Observable<TouchEvent> = fromEvent(document, 'touchmove') as Observable<TouchEvent>;
+		const touchEnd$ : Observable<TouchEvent> = fromEvent(document, 'touchend') as Observable<TouchEvent>;
 
-				this.dragInfo = {
-					start : snapshot.position,
-					current : snapshot.position,
-					target : snapshot.target
-				};
+		merge(
+			mouseMove$
+				.pipe(
+					filter(() => this.isDragging),
+					withLatestFrom(
+						mouseDown$
+							.pipe(
+								tap((event : MouseEvent) => {
+									console.warn('start dragging');
+
+									this.isDragging = true;
+
+									event.stopImmediatePropagation();
+								})
+							)
+						, (move$, down$) : DragInfo => {
+							return {
+								start : {
+									x : down$.clientX,
+									y : down$.clientY
+								},
+								current : {
+									x : move$.clientX,
+									y : move$.clientY
+								},
+								target : down$.target as HTMLElement
+							};
+						})
+				),
+			touchMove$
+				.pipe(
+					filter(() => this.isDragging),
+					withLatestFrom(
+						touchStart$
+							.pipe(
+								tap((event : TouchEvent) => {
+									console.warn('touch start');
+
+									this.isDragging = true;
+
+									event.stopImmediatePropagation();
+								})
+							)
+						, (move$, start$) : DragInfo => {
+							const moveTouch : Touch = move$.touches.item(0);
+							const startTouch : Touch = start$.touches.item(0);
+
+							return {
+								start : {
+									x : startTouch.clientX,
+									y : startTouch.clientY
+								},
+								current : {
+									x : moveTouch.clientX,
+									y : moveTouch.clientY
+								},
+								target : startTouch.target as HTMLElement
+							};
+						})
+				)
+		)
+			.subscribe((d : DragInfo) => {
+				console.warn('dragging', d.start, d.current);
 			});
 
-		// mouse move
-		fromEvent(document, 'mousemove')
-			.pipe(
-				filter(() => this.isDragging),
-				tap((event : MouseEvent) => {
-					event.stopImmediatePropagation();
-				}),
-				map<MouseEvent, DragSnapshot>((event : MouseEvent) => this.convertMouseEventToDragSnapshot(event))
-			)
-			.subscribe((snapshot : DragSnapshot) => {
-				// replace current only
-				this.dragInfo.current = snapshot.position;
+		merge(mouseUp$, touchEnd$)
+			.subscribe((event : MouseEvent | TouchEvent) => {
+				console.warn('stop dragging');
 
-				console.warn(this.dragInfo.start, this.dragInfo.current);
-			});
-
-		// mouse up
-		fromEvent(document, 'mouseup')
-			.subscribe((event : MouseEvent) => {
 				this.isDragging = false;
+
+				event.stopImmediatePropagation();
 			});
-	}
-
-	private convertMouseEventToDragSnapshot (event : MouseEvent) : DragSnapshot {
-		return {
-			position : {
-				x : event.clientX,
-				y : event.clientY
-			},
-			target : event.target as HTMLElement
-		};
-	}
-
-	private connectTouchEvent () {
-		// divided to set class
-		// touch start
-		fromEvent(this.ele.nativeElement, 'touchstart')
-			.pipe(
-				map<TouchEvent, DragSnapshot>(event => this.convertTouchEventToDragSnapshot(event))
-			)
-			.subscribe((snapshot : DragSnapshot) => {
-				this.isDragging = true;
-
-				this.dragInfo = {
-					start : snapshot.position,
-					current : snapshot.position,
-					target : snapshot.target
-				};
-			});
-
-		// touch move
-		fromEvent(this.ele.nativeElement, 'touchmove')
-			.pipe(
-				filter(() => this.isDragging),
-				tap((event : TouchEvent) => {
-					event.stopImmediatePropagation();
-				}),
-				map<TouchEvent, DragSnapshot>((event : TouchEvent) => this.convertTouchEventToDragSnapshot(event))
-			)
-			.subscribe((snapshot : DragSnapshot) => {
-				// replace current only
-				this.dragInfo.current = snapshot.position;
-
-				console.warn(this.dragInfo.start, this.dragInfo.current);
-			});
-
-		// touch end
-		fromEvent(this.ele.nativeElement, 'touchend')
-			.subscribe((event : TouchEvent) => {
-				this.isDragging = false;
-			});
-	}
-
-	private convertTouchEventToDragSnapshot (event : TouchEvent) : DragSnapshot {
-		const touch : Touch = event.touches.item(0);
-
-		return {
-			position : {
-				x : touch.clientX,
-				y : touch.clientY
-			},
-			target : event.target as HTMLElement
-		};
 	}
 
 	get nativeElement () : HTMLElement {
