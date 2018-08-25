@@ -58,7 +58,12 @@ export class DraggableDirective implements OnInit {
 									x : move$.clientX,
 									y : move$.clientY
 								},
-								target : down$.target as HTMLElement
+								target : down$.target as HTMLElement,
+
+								movement : {
+									x : move$.clientX - down$.clientX,
+									y : move$.clientY - down$.clientY
+								}
 							};
 						})
 				),
@@ -89,13 +94,18 @@ export class DraggableDirective implements OnInit {
 									x : moveTouch.clientX,
 									y : moveTouch.clientY
 								},
-								target : startTouch.target as HTMLElement
+								target : startTouch.target as HTMLElement,
+
+								movement : {
+									x : moveTouch.clientX - startTouch.clientX,
+									y : moveTouch.clientY - startTouch.clientY
+								}
 							};
 						})
 				)
 		)
 			.subscribe((d : DragInfo) => {
-				console.warn('dragging', d.start, d.current);
+				console.warn('dragging', d.start, d.movement);
 			});
 
 		merge(mouseUp$, touchEnd$)

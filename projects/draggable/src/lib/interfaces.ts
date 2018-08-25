@@ -14,6 +14,8 @@ export interface DragInfo {
 	start : Position;
 	current : Position;
 	target : HTMLElement;
+
+	movement : Position;
 }
 
 // TODO: deprecate
