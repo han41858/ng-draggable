@@ -15,7 +15,8 @@
 	<li>
 		<p>[ngMovable] & [ngMovableHelper] : enable move, [reset]="true" default</p>
 
-		<div class="box" ngMovable>
+		<div class="moveBox" ngMovable>
+			<span>inner text</span>
 			<ng-template ngMovableHelper></ng-template>
 		</div>
 	</li>
@@ -23,7 +24,8 @@
 	<li>
 		<p>[ngMovable] & [ngMovableHelper] : enable move, [reset]="false"</p>
 
-		<div class="box" ngMovable [reset]="false">
+		<div class="moveBox" ngMovable [reset]="false">
+			<span>inner text</span>
 			<ng-template ngMovableHelper></ng-template>
 		</div>
 	</li>

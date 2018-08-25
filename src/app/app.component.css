@@ -1,11 +1,22 @@
-.box {
+.box, .moveBox {
 	width: 10rem;
 	height: 10rem;
+}
+
+.box {
 	background-color: rgba(255, 0, 0, .2);
 }
 
 .box.dragging {
 	background-color: rgba(255, 0, 0, .5);
+}
+
+.moveBox {
+	background-color: lightblue;
+}
+
+.moveBox.dragging.dragSource {
+	opacity: .3;
 }
 
 .area {

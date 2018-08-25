@@ -32,6 +32,10 @@ export class MovableDirective extends DraggableDirective {
 		);
 	}
 
+	@HostBinding('class.dragSource') get isDragSource () : boolean {
+		return this.isDragging;
+	}
+
 	@HostListener('dragStart', ['$event'])
 	onDragStart (event : DragEvent) {
 		console.warn('onDragStart()', event);
