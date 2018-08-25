@@ -41,7 +41,12 @@ export class MovableDirective extends DraggableDirective {
 		console.warn('onDragStart()', event);
 
 		if (!!this.helper) {
-			this.helper.onDragStart(this);
+			const movableRect : DOMRect = this.getBoundingClientRect();
+
+			this.helper.onDragStart(this.ele.nativeElement, {
+				x : movableRect.x - this.position.x,
+				y : movableRect.y - this.position.y
+			});
 		}
 	}
 

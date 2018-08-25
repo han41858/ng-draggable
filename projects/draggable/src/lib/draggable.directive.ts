@@ -19,7 +19,7 @@ export class DraggableDirective implements OnInit {
 	// set css class
 	@HostBinding('class.dragging') isDragging : boolean = false;
 
-	constructor (private ele : ElementRef) {
+	constructor (protected ele : ElementRef) {
 	}
 
 	ngOnInit () {

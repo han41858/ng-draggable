@@ -14,7 +14,6 @@ export class MovableHelperDirective implements OnInit, OnDestroy {
 	private rootEle : HTMLElement;
 
 	private startPosition : Position = { x : 0, y : 0 };
-	private position : Position = { x : 0, y : 0 };
 
 	constructor (
 		private overlay : Overlay,
@@ -32,7 +31,7 @@ export class MovableHelperDirective implements OnInit, OnDestroy {
 		this.overlayRef.dispose();
 	}
 
-	onDragStart (movable : MovableDirective) {
+	onDragStart (template : HTMLElement, startPosition : Position) {
 		if (!this.overlayRef.hasAttached()) {
 			this.overlayRef.attach(new TemplatePortal(this.templateRef, this.viewContainerRef));
 
@@ -44,17 +43,14 @@ export class MovableHelperDirective implements OnInit, OnDestroy {
 
 			this.rootEle = this.overlayRef.overlayElement;
 
-			const movablePosition : Position = movable.getPosition();
-			const rectPosition : DOMRect = movable.getBoundingClientRect();
-
 			this.startPosition = {
-				x : rectPosition.x - movablePosition.x,
-				y : rectPosition.y - movablePosition.y
+				x : startPosition.x,
+				y : startPosition.y
 			};
 
 			this.setPosition(this.startPosition);
 
-			const cloneEle : HTMLElement = movable.nativeElement.cloneNode(true) as HTMLElement;
+			const cloneEle : HTMLElement = template.cloneNode(true) as HTMLElement;
 
 			const classNames : string[] = cloneEle.className.split(' ');
 			classNames.push('dragging');
@@ -71,6 +67,7 @@ export class MovableHelperDirective implements OnInit, OnDestroy {
 	}
 
 	onDragMove (event : DragEvent, boundaries : Boundaries) {
+		console.log('boundaries :', boundaries);
 		const newPosition = {
 			x : this.startPosition.x + event.movement.x,
 			y : this.startPosition.y + event.movement.y
@@ -95,9 +92,7 @@ export class MovableHelperDirective implements OnInit, OnDestroy {
 			}
 		}
 
-		this.position = newPosition;
-
-		this.setPosition(this.position);
+		this.setPosition(newPosition);
 	}
 
 	onDragEnd () {
