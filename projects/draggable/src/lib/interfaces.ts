@@ -10,20 +10,12 @@ export interface Boundaries {
 	maxY : number;
 }
 
-export interface DragInfo {
+export interface DragEvent {
 	start : Position;
 	current : Position;
 	target : HTMLElement;
 
 	movement : Position;
-}
-
-// TODO: deprecate
-export interface DragEvent {
-	clientX : number;
-	clientY : number;
-	movementX : number;
-	movementY : number;
 }
 
 export interface SortEvent {

@@ -76,31 +76,31 @@ export class MovableHelperDirective implements OnInit, OnDestroy {
 	onDragMove (event : DragEvent, boundaries : Boundaries) {
 		console.log('onDragMove()', event, boundaries);
 
-		const newPosition = {
-			x : event.movementX - this.startPosition.x,
-			y : event.movementY - this.startPosition.y
-		};
-
-		if (!!boundaries) {
-			// boundaries modification
-			if (newPosition.x < boundaries.minX) {
-				newPosition.x = boundaries.minX;
-			}
-
-			if (newPosition.x > boundaries.maxX) {
-				newPosition.x = boundaries.maxX;
-			}
-
-			if (newPosition.y < boundaries.minY) {
-				newPosition.y = boundaries.minY;
-			}
-
-			if (newPosition.y > boundaries.maxY) {
-				newPosition.y = boundaries.maxY;
-			}
-		}
-
-		this.position = newPosition;
+		// const newPosition = {
+		// 	x : event.movementX - this.startPosition.x,
+		// 	y : event.movementY - this.startPosition.y
+		// };
+		//
+		// if (!!boundaries) {
+		// 	// boundaries modification
+		// 	if (newPosition.x < boundaries.minX) {
+		// 		newPosition.x = boundaries.minX;
+		// 	}
+		//
+		// 	if (newPosition.x > boundaries.maxX) {
+		// 		newPosition.x = boundaries.maxX;
+		// 	}
+		//
+		// 	if (newPosition.y < boundaries.minY) {
+		// 		newPosition.y = boundaries.minY;
+		// 	}
+		//
+		// 	if (newPosition.y > boundaries.maxY) {
+		// 		newPosition.y = boundaries.maxY;
+		// 	}
+		// }
+		//
+		// this.position = newPosition;
 
 		// this.setPosition(this.position);
 	}

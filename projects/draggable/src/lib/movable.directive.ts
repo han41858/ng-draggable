@@ -1,8 +1,8 @@
-import { ContentChild, Directive, ElementRef, HostListener, Input, NgZone } from '@angular/core';
+import { ContentChild, Directive, ElementRef, HostListener, Input } from '@angular/core';
 
 import { DraggableDirective } from './draggable.directive';
 import { MovableHelperDirective } from './movable-helper.directive';
-import { Boundaries } from './interfaces';
+import { Boundaries, DragEvent } from './interfaces';
 
 
 @Directive({
@@ -24,20 +24,24 @@ export class MovableDirective extends DraggableDirective {
 	onDragStart (event : DragEvent) {
 		console.warn('onDragStart()', event);
 
-		if (!!this.helper) {
-			this.helper.onDragStart(this);
-		}
+		// if (!!this.helper) {
+		// 	this.helper.onDragStart(this);
+		// }
 	}
 
 	@HostListener('dragMove', ['$event'])
 	onDragMove (event : DragEvent) {
-		if (!!this.helper) {
-			this.helper.onDragMove(event, this.boundaries);
-		}
+		console.warn('onDragMove()', event);
+
+		// if (!!this.helper) {
+		// 	this.helper.onDragMove(event, this.boundaries);
+		// }
 	}
 
 	@HostListener('dragEnd', ['$event'])
 	onDragEnd (event : DragEvent) {
+		console.warn('onDragEnd()', event);
+
 		// if (this.reset) {
 		// 	this.position = {
 		// 		x : 0,
@@ -45,9 +49,9 @@ export class MovableDirective extends DraggableDirective {
 		// 	};
 		// }
 
-		if (!!this.helper) {
-			this.helper.onDragEnd();
-		}
+		// if (!!this.helper) {
+		// 	this.helper.onDragEnd();
+		// }
 	}
 
 	setBoundaries (boundaries : Boundaries) {
