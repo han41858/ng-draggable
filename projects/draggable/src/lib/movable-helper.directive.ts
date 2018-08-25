@@ -33,8 +33,6 @@ export class MovableHelperDirective implements OnInit, OnDestroy {
 	}
 
 	onDragStart (movable : MovableDirective) {
-		console.log('onDragStart()');
-
 		if (!this.overlayRef.hasAttached()) {
 			this.overlayRef.attach(new TemplatePortal(this.templateRef, this.viewContainerRef));
 
@@ -46,11 +44,12 @@ export class MovableHelperDirective implements OnInit, OnDestroy {
 
 			this.rootEle = this.overlayRef.overlayElement;
 
+			const movablePosition : Position = movable.getPosition();
 			const rectPosition : DOMRect = movable.getBoundingClientRect();
 
 			this.startPosition = {
-				x : rectPosition.x,
-				y : rectPosition.y
+				x : rectPosition.x - movablePosition.x,
+				y : rectPosition.y - movablePosition.y
 			};
 
 			this.setPosition(this.startPosition);
@@ -66,48 +65,42 @@ export class MovableHelperDirective implements OnInit, OnDestroy {
 	}
 
 	private setPosition (position : Position) {
-		console.warn('setPosition()', position);
-
 		if (!!this.rootEle) {
 			this.rootEle.style.transform = `translate(${position.x}px, ${position.y}px)`;
 		}
 	}
 
 	onDragMove (event : DragEvent, boundaries : Boundaries) {
-		console.log('onDragMove()', event, boundaries);
+		const newPosition = {
+			x : this.startPosition.x + event.movement.x,
+			y : this.startPosition.y + event.movement.y
+		};
 
-		// const newPosition = {
-		// 	x : event.movementX - this.startPosition.x,
-		// 	y : event.movementY - this.startPosition.y
-		// };
-		//
-		// if (!!boundaries) {
-		// 	// boundaries modification
-		// 	if (newPosition.x < boundaries.minX) {
-		// 		newPosition.x = boundaries.minX;
-		// 	}
-		//
-		// 	if (newPosition.x > boundaries.maxX) {
-		// 		newPosition.x = boundaries.maxX;
-		// 	}
-		//
-		// 	if (newPosition.y < boundaries.minY) {
-		// 		newPosition.y = boundaries.minY;
-		// 	}
-		//
-		// 	if (newPosition.y > boundaries.maxY) {
-		// 		newPosition.y = boundaries.maxY;
-		// 	}
-		// }
-		//
-		// this.position = newPosition;
+		if (!!boundaries) {
+			// boundaries modification
+			if (newPosition.x < boundaries.minX) {
+				newPosition.x = boundaries.minX;
+			}
 
-		// this.setPosition(this.position);
+			if (newPosition.x > boundaries.maxX) {
+				newPosition.x = boundaries.maxX;
+			}
+
+			if (newPosition.y < boundaries.minY) {
+				newPosition.y = boundaries.minY;
+			}
+
+			if (newPosition.y > boundaries.maxY) {
+				newPosition.y = boundaries.maxY;
+			}
+		}
+
+		this.position = newPosition;
+
+		this.setPosition(this.position);
 	}
 
 	onDragEnd () {
-		console.log('onDragEnd()');
-
 		if (this.overlayRef.hasAttached()) {
 			this.rootEle.innerHTML = '';
 
