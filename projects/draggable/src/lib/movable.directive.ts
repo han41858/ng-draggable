@@ -38,12 +38,14 @@ export class MovableDirective extends DraggableDirective {
 
 	@HostListener('dragStart', ['$event'])
 	onDragStart (event : DragEvent) {
-		console.warn('onDragStart()', event);
-
 		if (!!this.helper) {
+			const scrollingEle : HTMLElement = document['scrollingElement'] ?
+				document.scrollingElement as HTMLElement :
+				document.documentElement;
+
 			const helperStartPosition : Position = {
-				x : this.clientRect.x - this.position.x,
-				y : this.clientRect.y - this.position.y
+				x : this.clientRect.x - this.position.x + scrollingEle.scrollLeft,
+				y : this.clientRect.y - this.position.y + scrollingEle.scrollTop
 			};
 
 			this.helper.onDragStart(this.ele.nativeElement, helperStartPosition);
@@ -52,8 +54,6 @@ export class MovableDirective extends DraggableDirective {
 
 	@HostListener('dragMove', ['$event'])
 	onDragMove (event : DragEvent) {
-		console.warn('onDragMove()', event);
-
 		if (!!this.helper) {
 			const newPosition : Position = this.restrictMovement({
 				x : event.movement.x,
@@ -66,8 +66,6 @@ export class MovableDirective extends DraggableDirective {
 
 	@HostListener('dragEnd', ['$event'])
 	onDragEnd (event : DragEvent) {
-		console.warn('onDragEnd()', event);
-
 		if (!!this.helper) {
 			this.helper.onDragEnd();
 		}
