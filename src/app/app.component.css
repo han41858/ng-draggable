@@ -25,15 +25,19 @@
 	background-color: rgba(0, 255, 0, .1);
 }
 
+.area.sortable {
+	display: flex;
+	justify-content: space-between;
+}
+
 .area.horizontal {
 	width: 46rem;
 	height: 10rem;
-
-	display: flex;
-	justify-content: space-between;
 }
 
 .area.vertical {
 	width: 10rem;
 	height: 46rem;
+
+	flex-direction: column;
 }

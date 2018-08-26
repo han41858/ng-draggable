@@ -6,11 +6,11 @@
 </div>
 
 <ol>
-	<!--<li>-->
-	<!--<p>[ngDraggable] : detect drag</p>-->
+	<li>
+		<p>[ngDraggable] : detect drag</p>
 
-	<!--<div class="box" ngDraggable></div>-->
-	<!--</li>-->
+		<div class="box" ngDraggable></div>
+	</li>
 
 	<li>
 		<p>[ngMovable] & [ngMovableHelper] : enable move, [reset]="true" default</p>
@@ -40,32 +40,32 @@
 		</div>
 	</li>
 
-	<!--<li>-->
-	<!--<p>[ngMovableArea]</p>-->
-	<!---->
-	<!--<div class="area" ngMovableArea>-->
-	<!--<div class="box" ngMovable [reset]="false"></div>-->
-	<!--</div>-->
-	<!--</li>-->
+	<li>
+		<p>[ngSortable] : sortable list</p>
 
-	<!--<li>-->
-	<!--<p>[ngSortable] : sortable list</p>-->
+		<ul>
+			<li>
+				<p>horizontal</p>
 
-	<!--<ul>-->
-	<!--<li>-->
-	<!--<p>horizontal</p>-->
+				<div class="area sortable horizontal" ngSortableArea (sort)="sort($event)">
+					<div class="box" ngMovable *ngFor="let box of sortableList">
+						<span>{{ box }}</span>
+						<ng-template ngMovableHelper></ng-template>
+					</div>
+				</div>
+			</li>
 
-	<!--<div class="area horizontal" ngSortableArea (sort)="sort($event)">-->
-	<!--<div class="box" ngMovable *ngFor="let box of sortableList">-->
-	<!--<span>{{ box }}</span>-->
-	<!--</div>-->
-	<!--</div>-->
-	<!--</li>-->
+			<li>
+				<p>vertical</p>
 
-	<!--<li>-->
-	<!--<p>vertical</p>-->
-	<!--</li>-->
-	<!--</ul>-->
-	<!--</li>-->
+				<div class="area sortable vertical" ngSortableArea (sort)="sort($event)">
+					<div class="box" ngMovable *ngFor="let box of sortableList">
+						<span>{{ box }}</span>
+						<ng-template ngMovableHelper></ng-template>
+					</div>
+				</div>
+			</li>
+		</ul>
+	</li>
 </ol>
 
