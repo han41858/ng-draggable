@@ -2,8 +2,7 @@ import { Directive, OnDestroy, OnInit, TemplateRef, ViewContainerRef } from '@an
 import { GlobalPositionStrategy, Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 
-import { MovableDirective } from './movable.directive';
-import { Boundaries, DragEvent, Position } from './interfaces';
+import { Position } from './interfaces';
 
 @Directive({
 	selector : '[ngMovableHelper]'
@@ -12,8 +11,6 @@ export class MovableHelperDirective implements OnInit, OnDestroy {
 
 	private overlayRef : OverlayRef;
 	private rootEle : HTMLElement;
-
-	private startPosition : Position = { x : 0, y : 0 };
 
 	constructor (
 		private overlay : Overlay,
@@ -38,17 +35,12 @@ export class MovableHelperDirective implements OnInit, OnDestroy {
 			const overlayContainer : HTMLElement = this.overlayRef.hostElement;
 
 			overlayContainer.style.position = 'absolute';
-			overlayContainer.style.left = '0';
-			overlayContainer.style.top = '0';
+
+			overlayContainer.style.left = `${startPosition.x}px`;
+			overlayContainer.style.top = `${startPosition.y}px`;
 
 			this.rootEle = this.overlayRef.overlayElement;
-
-			this.startPosition = {
-				x : startPosition.x,
-				y : startPosition.y
-			};
-
-			this.setPosition(this.startPosition);
+			this.setPosition({ x : 0, y : 0 });
 
 			const cloneEle : HTMLElement = template.cloneNode(true) as HTMLElement;
 
@@ -66,33 +58,8 @@ export class MovableHelperDirective implements OnInit, OnDestroy {
 		}
 	}
 
-	onDragMove (event : DragEvent, boundaries : Boundaries) {
-		console.log('boundaries :', boundaries);
-		const newPosition = {
-			x : this.startPosition.x + event.movement.x,
-			y : this.startPosition.y + event.movement.y
-		};
-
-		if (!!boundaries) {
-			// boundaries modification
-			if (newPosition.x < boundaries.minX) {
-				newPosition.x = boundaries.minX;
-			}
-
-			if (newPosition.x > boundaries.maxX) {
-				newPosition.x = boundaries.maxX;
-			}
-
-			if (newPosition.y < boundaries.minY) {
-				newPosition.y = boundaries.minY;
-			}
-
-			if (newPosition.y > boundaries.maxY) {
-				newPosition.y = boundaries.maxY;
-			}
-		}
-
-		this.setPosition(newPosition);
+	onDragMove (position : Position) {
+		this.setPosition(position);
 	}
 
 	onDragEnd () {

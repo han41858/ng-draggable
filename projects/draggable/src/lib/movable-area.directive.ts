@@ -4,7 +4,6 @@ import { Subscription } from 'rxjs';
 
 import { MovableDirective } from './movable.directive';
 
-
 @Directive({
 	selector : '[ngMovableArea]'
 })
@@ -38,13 +37,11 @@ export class MovableAreaDirective implements AfterContentInit {
 	setBoundaries (movable : MovableDirective) {
 		const areaRect : DOMRect = this.ele.nativeElement.getBoundingClientRect();
 
-		const movableRect : DOMRect = movable.getBoundingClientRect();
-
-		movable.setBoundaries({
-			minX : areaRect.left - movableRect.left,
-			maxX : areaRect.right - movableRect.right,
-			minY : areaRect.top - movableRect.top,
-			maxY : areaRect.bottom - movableRect.bottom
+		movable.setMovementBoundaries({
+			minX : areaRect.left,
+			maxX : areaRect.right,
+			minY : areaRect.top,
+			maxY : areaRect.bottom
 		});
 	}
 

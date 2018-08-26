@@ -136,11 +136,7 @@ export class DraggableDirective implements OnInit {
 		return dragEvent;
 	}
 
-	get nativeElement () : HTMLElement {
-		return this.ele.nativeElement;
-	}
-
-	getBoundingClientRect () : DOMRect {
+	get clientRect () : DOMRect {
 		return this.ele.nativeElement.getBoundingClientRect();
 	}
 

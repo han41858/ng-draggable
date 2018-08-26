@@ -41,12 +41,12 @@ export class MovableDirective extends DraggableDirective {
 		console.warn('onDragStart()', event);
 
 		if (!!this.helper) {
-			const movableRect : DOMRect = this.getBoundingClientRect();
+			const helperStartPosition : Position = {
+				x : this.clientRect.x - this.position.x,
+				y : this.clientRect.y - this.position.y
+			};
 
-			this.helper.onDragStart(this.ele.nativeElement, {
-				x : movableRect.x - this.position.x,
-				y : movableRect.y - this.position.y
-			});
+			this.helper.onDragStart(this.ele.nativeElement, helperStartPosition);
 		}
 	}
 
@@ -55,7 +55,12 @@ export class MovableDirective extends DraggableDirective {
 		console.warn('onDragMove()', event);
 
 		if (!!this.helper) {
-			this.helper.onDragMove(event, this.boundaries);
+			const newPosition : Position = this.restrictMovement({
+				x : event.movement.x,
+				y : event.movement.y
+			});
+
+			this.helper.onDragMove(newPosition);
 		}
 	}
 
@@ -63,22 +68,51 @@ export class MovableDirective extends DraggableDirective {
 	onDragEnd (event : DragEvent) {
 		console.warn('onDragEnd()', event);
 
-		if (this.reset === false) {
-			this.position.x += event.movement.x;
-			this.position.y += event.movement.y;
-		}
-
 		if (!!this.helper) {
 			this.helper.onDragEnd();
 		}
+
+		if (this.reset) {
+			this.position = {
+				x : 0,
+				y : 0
+			};
+		}
+		else {
+			const restrictedMovement : Position = this.restrictMovement({
+				x : event.movement.x,
+				y : event.movement.y
+			});
+
+			this.position = {
+				x : this.position.x + restrictedMovement.x,
+				y : this.position.y + restrictedMovement.y
+			};
+		}
 	}
 
-	getPosition () : Position {
-		return this.position;
+	setMovementBoundaries (boundaries : Boundaries) {
+		this.boundaries = {
+			minX : boundaries.minX - this.clientRect.left,
+			maxX : boundaries.maxX - this.clientRect.right,
+			minY : boundaries.minY - this.clientRect.top,
+			maxY : boundaries.maxY - this.clientRect.bottom
+		};
 	}
 
-	setBoundaries (boundaries : Boundaries) {
-		this.boundaries = boundaries;
+	restrictMovement (movement : Position) : Position {
+		let newMovement : Position = { ...movement };
+
+		if (this.reset === false && !!this.boundaries) {
+			// boundaries modification
+			newMovement.x = Math.min(newMovement.x, this.boundaries.maxX);
+			newMovement.x = Math.max(newMovement.x, this.boundaries.minX);
+
+			newMovement.y = Math.min(newMovement.y, this.boundaries.maxY);
+			newMovement.y = Math.max(newMovement.y, this.boundaries.minY);
+		}
+
+		return newMovement;
 	}
 
 }

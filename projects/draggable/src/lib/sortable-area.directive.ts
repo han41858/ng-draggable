@@ -31,25 +31,25 @@ export class SortableAreaDirective extends MovableAreaDirective {
 	}
 
 	checkSort (event : PointerEvent, targetMovable : MovableDirective) {
-		const replaceTarget : MovableDirective = this.movables.find((movable, i) => {
-			if (movable === targetMovable) {
-				return false;
-			}
-
-			const otherRect : DOMRect = movable.getBoundingClientRect();
-
-			return otherRect.x < event.clientX && otherRect.x + otherRect.width > event.clientX
-				&& otherRect.y < event.clientY && otherRect.y + otherRect.height > event.clientY;
-		});
-
-		if (!!replaceTarget) {
-			const movables : MovableDirective[] = this.movables.toArray();
-
-			this.sort.emit({
-				currentIndex : movables.indexOf(targetMovable),
-				newIndex : movables.indexOf(replaceTarget)
-			});
-		}
+		// const replaceTarget : MovableDirective = this.movables.find((movable, i) => {
+		// 	if (movable === targetMovable) {
+		// 		return false;
+		// 	}
+		//
+		// 	const otherRect : DOMRect = movable.getBoundingClientRect();
+		//
+		// 	return otherRect.x < event.clientX && otherRect.x + otherRect.width > event.clientX
+		// 		&& otherRect.y < event.clientY && otherRect.y + otherRect.height > event.clientY;
+		// });
+		//
+		// if (!!replaceTarget) {
+		// 	const movables : MovableDirective[] = this.movables.toArray();
+		//
+		// 	this.sort.emit({
+		// 		currentIndex : movables.indexOf(targetMovable),
+		// 		newIndex : movables.indexOf(replaceTarget)
+		// 	});
+		// }
 	}
 
 }
