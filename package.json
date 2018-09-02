@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve --aot",
-    "build": "ng-packagr -p package.json",
+    "build": "ng-packagr -p projects/draggable/package.json",
     "test": "ng test",
     "lint": "ng lint"
   },
@@ -48,14 +48,5 @@
     "tslib": "^1.9.0",
     "tslint": "~5.9.1",
     "typescript": "~2.7.2"
-  },
-  "$schema": "./node_modules/ng-packagr/package.schema.json",
-  "ngPackage": {
-    "lib": {
-	  "entryFile": "projects/draggable/src/public_api.ts"
-    },
-    "whitelistedNonPeerDependencies": [
-      "."
-    ]
   }
 }
