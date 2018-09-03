@@ -1,9 +1,25 @@
 {
-  "name": "draggable",
-  "version": "0.0.1",
-  "peerDependencies": {
-    "@angular/cdk": "^6.4.6",
-    "@angular/common": "^6.0.0-rc.0 || ^6.0.0",
-    "@angular/core": "^6.0.0-rc.0 || ^6.0.0"
-  }
+	"name": "ng-draggable-han",
+	"version": "1.0.0",
+	"author": "han41858@gmail.com",
+	"description": "Angular draggable module",
+	"keywords": [
+		"angular",
+		"drag",
+		"draggable",
+		"sortable"
+	],
+	"bugs": {
+		"url": "https://github.com/han41858/ng-draggable/issues"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/han41858/ng-draggable"
+	},
+	"license": "MIT",
+	"peerDependencies": {
+		"@angular/cdk": "^6.4.6",
+		"@angular/common": "^6.0.0-rc.0 || ^6.0.0",
+		"@angular/core": "^6.0.0-rc.0 || ^6.0.0"
+	}
 }

@@ -2,6 +2,7 @@
 
 # compiled output
 /dist
+/projects/draggable/dist
 /tmp
 /out-tsc
 
