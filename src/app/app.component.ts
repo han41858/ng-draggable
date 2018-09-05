@@ -12,8 +12,6 @@ export class AppComponent {
 	public sortableList : any[] = ['box 1', 'box 2', 'box 3', 'box 4'];
 
 	sort (event : SortEvent) {
-		console.warn('sort()', event);
-
 		const current = this.sortableList[event.currentIndex];
 		const swapWith = this.sortableList[event.newIndex];
 

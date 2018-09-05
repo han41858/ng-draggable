@@ -37,7 +37,7 @@ export class MovableDirective extends DraggableDirective {
 	}
 
 	@HostListener('dragStart', ['$event'])
-	onDragStart (event : DragEvent) {
+	private onDragStart (event : DragEvent) {
 		if (!!this.helper) {
 			const scrollingEle : HTMLElement = document['scrollingElement'] ?
 				document.scrollingElement as HTMLElement :
@@ -53,7 +53,7 @@ export class MovableDirective extends DraggableDirective {
 	}
 
 	@HostListener('dragMove', ['$event'])
-	onDragMove (event : DragEvent) {
+	private onDragMove (event : DragEvent) {
 		if (!!this.helper) {
 			const newPosition : Position = this.restrictMovement({
 				x : event.movement.x,
@@ -65,7 +65,7 @@ export class MovableDirective extends DraggableDirective {
 	}
 
 	@HostListener('dragEnd', ['$event'])
-	onDragEnd (event : DragEvent) {
+	private onDragEnd (event : DragEvent) {
 		if (!!this.helper) {
 			this.helper.onDragEnd();
 		}
@@ -98,7 +98,7 @@ export class MovableDirective extends DraggableDirective {
 		};
 	}
 
-	restrictMovement (movement : Position) : Position {
+	private restrictMovement (movement : Position) : Position {
 		let newMovement : Position = { ...movement };
 
 		if (this.reset === false && !!this.boundaries) {

@@ -30,7 +30,7 @@ export class SortableAreaDirective extends MovableAreaDirective {
 		this.movables.notifyOnChanges();
 	}
 
-	checkSort (event : DragEvent, targetMovable : MovableDirective) {
+	private checkSort (event : DragEvent, targetMovable : MovableDirective) {
 		const replaceTarget : MovableDirective = this.movables.find((movable, i) => {
 			if (movable === targetMovable) {
 				return false;
