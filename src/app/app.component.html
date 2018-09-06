@@ -13,6 +13,12 @@
 	</li>
 
 	<li>
+		<p>[ngDraggable] : disabled by flag</p>
+
+		<div class="box" [ngDraggable]="false"></div>
+	</li>
+
+	<li>
 		<p>[ngMovable] & [ngMovableHelper] : enable move, [reset]="true" default</p>
 
 		<div class="moveBox" ngMovable>
@@ -38,6 +44,15 @@
 				<span>flex box</span>
 				<ng-template ngMovableHelper></ng-template>
 			</div>
+		</div>
+	</li>
+
+	<li>
+		<p>[ngMovable] & [ngMovableHelper] : disabled by flag</p>
+
+		<div class="moveBox" [ngMovable]="false">
+			<span>inner text</span>
+			<ng-template ngMovableHelper></ng-template>
 		</div>
 	</li>
 

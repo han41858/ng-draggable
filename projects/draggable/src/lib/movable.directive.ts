@@ -10,6 +10,10 @@ import { Boundaries, DragEvent, Position } from './interfaces';
 })
 export class MovableDirective extends DraggableDirective {
 
+	@Input('ngMovable') set isMovable (value : boolean) {
+		this.isDraggable = value;
+	}
+
 	@ContentChild(MovableHelperDirective) helper : MovableHelperDirective;
 
 	@Input() reset : boolean = true;

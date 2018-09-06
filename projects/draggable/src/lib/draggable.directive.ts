@@ -1,4 +1,4 @@
-import { Directive, ElementRef, EventEmitter, HostBinding, OnInit, Output } from '@angular/core';
+import { Directive, ElementRef, EventEmitter, HostBinding, Input, OnInit, Output } from '@angular/core';
 
 import { fromEvent, merge, Observable } from 'rxjs';
 import { filter, share, tap, withLatestFrom } from 'rxjs/operators';
@@ -10,7 +10,20 @@ import { DragEvent } from './interfaces';
 })
 export class DraggableDirective implements OnInit {
 
-	// no 'draggable' attribute
+	// no 'draggable' attribute for DOM
+
+	// draggable switch, binding by attribute
+	protected _isDraggable : boolean = true;
+
+	get isDraggable () : boolean {
+		return this._isDraggable;
+	}
+
+	@Input('ngDraggable') set isDraggable (value : boolean) {
+		if (typeof value === 'boolean') {
+			this._isDraggable = value;
+		}
+	}
 
 	@Output() dragStart : EventEmitter<DragEvent> = new EventEmitter();
 	@Output() dragMove : EventEmitter<DragEvent> = new EventEmitter();
@@ -39,6 +52,7 @@ export class DraggableDirective implements OnInit {
 				withLatestFrom(
 					merge(mouseDown$, touchStart$)
 						.pipe(
+							filter(() => this.isDraggable),
 							tap((event : MouseEvent | TouchEvent) => {
 								this.isDragging = true;
 
