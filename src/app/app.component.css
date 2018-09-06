@@ -19,6 +19,27 @@
 	opacity: .3;
 }
 
+.moveBox.dragging.dragDummy {
+	opacity: .8;
+}
+
+.flexContainer {
+	display: flex;
+	width: 20rem;
+	height: 12rem;
+	background-color: rgba(255, 0, 0, .2);
+}
+
+.flexBox {
+	background-color: lightgreen;
+	display: flex;
+	flex: 1;
+}
+
+.flexBox.dragging.dragSource {
+	opacity: .3;
+}
+
 .area {
 	width: 30rem;
 	height: 15rem;
