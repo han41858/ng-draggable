@@ -53,7 +53,7 @@ export class MovableHelperDirective implements OnInit, OnDestroy {
 			}
 
 			const classNames : string[] = cloneEle.className.split(' ');
-			classNames.push('dragging');
+			classNames.push('dragging', 'dragDummy');
 			cloneEle.className = classNames.join(' ');
 
 			this.rootEle.appendChild(cloneEle);

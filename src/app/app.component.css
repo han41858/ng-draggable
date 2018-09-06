@@ -19,6 +19,10 @@
 	opacity: .3;
 }
 
+.moveBox.dragging.dragDummy {
+	opacity: .8;
+}
+
 .flexContainer {
 	display: flex;
 	width: 20rem;
