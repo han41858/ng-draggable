@@ -1,4 +1,4 @@
-import { Directive, OnDestroy, OnInit, TemplateRef, ViewContainerRef } from '@angular/core';
+import { Directive, TemplateRef, ViewContainerRef } from '@angular/core';
 import { GlobalPositionStrategy, Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 
@@ -7,7 +7,7 @@ import { Position } from './interfaces';
 @Directive({
 	selector : '[ngMovableHelper]'
 })
-export class MovableHelperDirective implements OnInit, OnDestroy {
+export class MovableHelperDirective {
 
 	private overlayRef : OverlayRef;
 	private rootEle : HTMLElement;
@@ -18,45 +18,41 @@ export class MovableHelperDirective implements OnInit, OnDestroy {
 		private viewContainerRef : ViewContainerRef) {
 	}
 
-	ngOnInit () {
-		this.overlayRef = this.overlay.create({
-			positionStrategy : new GlobalPositionStrategy()
-		});
-	}
-
-	ngOnDestroy () {
-		this.overlayRef.dispose();
-	}
-
 	onDragStart (template : HTMLElement, startPosition : Position) {
-		if (!this.overlayRef.hasAttached()) {
-			this.overlayRef.attach(new TemplatePortal(this.templateRef, this.viewContainerRef));
+		if (!this.overlayRef) {
+			this.overlayRef = this.overlay.create({
+				positionStrategy : new GlobalPositionStrategy()
+			});
 
-			const overlayContainer : HTMLElement = this.overlayRef.hostElement;
+			if (!this.overlayRef.hasAttached()) {
+				this.overlayRef.attach(new TemplatePortal(this.templateRef, this.viewContainerRef));
 
-			overlayContainer.style.position = 'absolute';
+				const overlayContainer : HTMLElement = this.overlayRef.hostElement;
 
-			overlayContainer.style.left = `${startPosition.x}px`;
-			overlayContainer.style.top = `${startPosition.y}px`;
+				overlayContainer.style.position = 'absolute';
 
-			this.rootEle = this.overlayRef.overlayElement;
-			this.setPosition({ x : 0, y : 0 });
+				overlayContainer.style.left = `${startPosition.x}px`;
+				overlayContainer.style.top = `${startPosition.y}px`;
 
-			const cloneEle : HTMLElement = template.cloneNode(true) as HTMLElement;
+				this.rootEle = this.overlayRef.overlayElement;
+				this.setPosition({ x : 0, y : 0 });
 
-			const style : CSSStyleDeclaration = getComputedStyle(template);
+				const cloneEle : HTMLElement = template.cloneNode(true) as HTMLElement;
 
-			if (style['display'] === 'flex') {
-				// set fixed size
-				cloneEle.style.width = style['width'];
-				cloneEle.style.height = style['height'];
+				const style : CSSStyleDeclaration = getComputedStyle(template);
+
+				if (style['display'] === 'flex') {
+					// set fixed size
+					cloneEle.style.width = style['width'];
+					cloneEle.style.height = style['height'];
+				}
+
+				const classNames : string[] = cloneEle.className.split(' ');
+				classNames.push('dragging', 'dragDummy');
+				cloneEle.className = classNames.join(' ');
+
+				this.rootEle.appendChild(cloneEle);
 			}
-
-			const classNames : string[] = cloneEle.className.split(' ');
-			classNames.push('dragging', 'dragDummy');
-			cloneEle.className = classNames.join(' ');
-
-			this.rootEle.appendChild(cloneEle);
 		}
 	}
 
@@ -71,10 +67,15 @@ export class MovableHelperDirective implements OnInit, OnDestroy {
 	}
 
 	onDragEnd () {
-		if (this.overlayRef.hasAttached()) {
-			this.rootEle.innerHTML = '';
+		if (!!this.overlayRef) {
+			if (this.overlayRef.hasAttached()) {
+				this.rootEle.innerHTML = '';
 
-			this.overlayRef.detach();
+				this.overlayRef.detach();
+			}
+
+			this.overlayRef.dispose();
+			this.overlayRef = null;
 		}
 	}
 
