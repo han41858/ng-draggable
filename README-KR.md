@@ -128,8 +128,18 @@ MovableDirective는 엘리먼트가 드래그에 반응해서 이동하는 기�
 	
 * 메소드
 
-	- `setMovementBoundaries (boundaries : Boundaries)` : MovableDirective 엘리먼트가 이동하는 영역을 제한합니다. MovableAreaDirective에서 자동으로 사용합니다. 
+	- `setMovementBoundaries (boundaries : Boundaries)` : MovableDirective 엘리먼트가 이동하는 영역을 제한합니다. MovableAreaDirective에서 자동으로 사용합니다.
 	
+* CSS 클래스
+
+	- `dragging` : 드래그 하는 동안 원래 엘리먼트와 복제 엘리먼트에 지정됩니다.
+	
+	- `dragSource` : 드래그 하는 동안 원래 엘리먼트에 지정됩니다.
+	
+	- `dragDummy` : 드래그 하는 동안 복제 엘리먼트에 지정됩니다.
+	
+	> 복제 엘리먼트는 `@angular/cdk/overlay`를 사용하기 때문에 원래 엘리먼트나 부모 엘리먼트의 하위 계층에 존재하지 않습니다. 복제 엘리먼트는 `<body>`에 렌더링됩니다.
+		
 #### `MovableHelperDirective` (`['ngMovableHelper]`)
 
 MovableDirective 엘리먼트가 드래그되는 동안 화면에 복제본을 표시할 때 사용합니다.
