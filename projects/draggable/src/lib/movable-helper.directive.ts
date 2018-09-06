@@ -45,7 +45,8 @@ export class MovableHelperDirective implements OnInit, OnDestroy {
 			const cloneEle : HTMLElement = template.cloneNode(true) as HTMLElement;
 
 			const style : CSSStyleDeclaration = getComputedStyle(template);
-			if (style['display'] === 'flex' && style['flexGrow'] === '1') {
+
+			if (style['display'] === 'flex') {
 				// set fixed size
 				cloneEle.style.width = style['width'];
 				cloneEle.style.height = style['height'];
