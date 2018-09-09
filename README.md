@@ -1,39 +1,50 @@
 # NgDraggable
 
-Angular Draggable Module
+Angular module to drag element. Also provide some directives restricting drag area, emitting sort event while dragging.
 
-## demo
+[DEMO](https://stackblitz.com/edit/ng-draggable)
 
 ## Usage
-1. install `ng-draggable-han` npm package.
 
-1. import `DraggableModule` to `NgModule`.
-```typescript
-import { DraggableModule } from 'ng-draggable-han';
+1. install `ng-draggable-han` package.
 
-@NgModule({
-	imports : [..., DraggableModule]
-})
+	```
+	yarn add ng-draggable-han
+	```
 
-```
+1. import `DraggableModule` to `@NgModule`.
 
-1. Add directive to template, for example with `DraggableDirective`:
-```html
-<div class="box" ngDraggable (dragStart)="onDragStart($event)"></div>
-```
+	```typescript
+    import { DraggableModule } from 'ng-draggable-han';
+    
+    @NgModule({
+    	imports : [..., DraggableModule]
+    })
+    
+    ```
+    
+1. Add directive to template. For example, `DraggableDirective` is used by:
 
-1. Declare event handler.
-```typescript
-class SomeComponent {
-	onDragStart (event : DragEvent) {
-		// do something
-	}
-}
-```
+	```html
+    <div class="box" ngDraggable (dragStart)="onDragStart($event)"></div>
+    ```
+    
+1. Add event handler.
 
+	```typescript
+    class SomeComponent {
+    	onDragStart (event : DragEvent) {
+    		// do something
+    	}
+    }
+    ```
+    
 ## Common Interfaces
 
-### Position
+#### `Position`
+
+Represents the coordinates of x, y.
+
 ```typescript
 interface Position {
 	x : number;
@@ -41,7 +52,10 @@ interface Position {
 }
 ```
 
-### Boundaries
+#### `Boundaries`
+
+Restrict area of elements using `MovableDirective`.
+
 ```typescript
 interface Boundaries {
 	minX : number;
@@ -51,62 +65,146 @@ interface Boundaries {
 }
 ```
 
-### DragEvent
+#### `DragEvent`
+
+Represent drag event, emitted by `DraggableDirective`.
+
 ```typescript
 interface DragEvent {
-	start : Position;
-	current : Position;
-	target : HTMLElement;
+	start : Position; // position of starting drag
+	current : Position; // position of current drag
+	target : HTMLElement; // dragging HTMLElement
 
-	movement : Position;
+	movement : Position; // offsets while drag
 }
 ```
 
-### SortEvent
+#### `SortEvent`
+
+Represent sort event, emitted by `SortableAreaDirective`. Targets are `MovableDirective`.
+
 ```typescript
 interface SortEvent {
-	currentIndex : number;
-	newIndex : number;
+	currentIndex : number; // index of starting drag element
+	newIndex : number; // index of sort target
 }
 ```
 
 ## Directives
 
-### DraggableDirective :`[ngDraggable]`
+#### `DraggableDirective` (`[ngDraggable]`)
 
-Add reacting ability to element.
+Add draggable interaction to element.
 
 ```html
 <div ngDraggable>react drag event</div>
 ```
 
-* properties
+* Properties
 
-	- `isDragging` : flag variable, used to set class name `dragging`
-
-* events
-
-	- `dragStart : DragEvent` : start drag
+	- `@Input() ngMovable : boolean` : Switch of drag interaction. (default: true)
 	
-	- `dragMove : DragEvent` : moving drag
-	
-	- `dragEnd : DragEvent` : end drag
-	
-* methods
+		```html
+		<div ngDraggable>default : true</div>
+		<div [ngDraggable]="false">disabled</div>
+		<div [ngDraggable]="someFlag">set by flag</div>
+		```
 
-	- `clientRect()` : get DOMRect of element (internally, use `getBoundingClientRect()`)
+	- `isDragging : boolean` : Represents element is dragging now. This flag used to set `dragging` CSS class.
 
+* Methods
 
-### MovableDirective : `[ngMovable]`
+	- `clientRect() : DOMRect` : Returns DOMRect of element. (internally use `getBoundingClientRect()`)
 
-Add moving ability to element. This need internal `MovableHelper`
+* Events
+
+	- `dragStart : DragEvent` : Drag start event
+    	
+    - `dragMove : DragEvent` : Drag move event
+    
+    - `dragEnd : DragEvent` : Drag end event
+
+#### `MovableDirective` (`[ngMovable]`)
+
+Add draggable interaction & moving element copied. Element added this directives not moving in real. If you want to display moving element, use `MovableHelperDirective` together. 
 
 ```html
-<div ngMovable>moving by drag</div>
+<div class="moveBox" ngMovable>
+	<span>inner text</span>
+	<ng-template ngMovableHelper></ng-template>
+</div>
 ```
 
-### MovableHelperDirective :`[ngMovableHelper]`
+* Properties
 
-### MovableAreaDirective : `[ngMovableArea]`
+	- `ngMovable : boolean` : Switch of drag interaction, (default : true)
+	
+		```html
+		<div ngMovable>default : true</div>
+		<div [ngMovable]="false">disabled</div>
+		<div [ngMovable]="someFlag">set by flag</div>
+		```
+	- `@Input() reset : boolean` : Switch of resetting position. If set, returns to original position. (true : `true`)
+	
+* Methods
 
-### SortableAreaDirective : `[ngSortableArea]`
+	- `setMovementBoundaries (boundaries : Boundaries)` : Restrict moving area of `MovableDirective`. Called by `MovableAreaDirective`.
+	
+* CSS Classes
+
+	- `dragging` : Added to original/copied element while dragging.
+	
+	- `dragSource` : Added to original element while dragging.
+	
+	- `dragDummy` : Added to copied element while dragging.
+	
+	> Copied element does not exist in original element / original's parent element. This directive uses `@angular/cdk/overlay`, so, copied element rendered in `<body>` element.
+		
+#### `MovableHelperDirective` (`['ngMovableHelper]`)
+
+Display copied element of `MovableDirective` while dragging.
+
+#### `MovableAreaDirective` (`[ngMovableArea]`)
+
+Restrict area of child `MovableDirective`. `MovableDirective` element can't move out of `MovableAreaDirective`.
+
+```html
+<div class="area" ngMovableArea>
+	<div class="box" ngMovable [reset]="false">
+		<ng-template ngMovableHelper></ng-template>
+	</div>
+</div>
+```
+
+#### `SortableAreaDirective` (`[ngSortableArea]`)
+
+Emit `SortEvent` if one `MovableDirective` moved over another `MovableDirective` element in `SortableAreaDirective`.
+
+```html
+<div class="area sortable" ngSortableArea (sort)="sort($event)">
+	<div class="box" ngMovable *ngFor="let box of sortableList">
+		<span>{{ box }}</span>
+		<ng-template ngMovableHelper></ng-template>
+	</div>
+</div>
+```
+
+```typescript
+export class AppComponent {
+	title = 'ng-draggable';
+
+	public sortableList : any[] = ['box 1', 'box 2', 'box 3', 'box 4'];
+
+	sort (event : SortEvent) {
+		const current = this.sortableList[event.currentIndex];
+		const swapWith = this.sortableList[event.newIndex];
+
+		this.sortableList[event.newIndex] = current;
+		this.sortableList[event.currentIndex] = swapWith;
+	}
+}
+```
+
+* Events
+
+	- `sort : SortEvent` : Represent emitting sort condition.
