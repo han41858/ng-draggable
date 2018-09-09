@@ -2,6 +2,8 @@
 
 Angular module to drag element. Also provide some directives restricting drag area, emitting sort event while dragging.
 
+[한국어](https://github.com/han41858/ng-draggable/blob/master/README-KR.md)
+
 [DEMO](https://stackblitz.com/edit/ng-draggable)
 
 ## Usage
