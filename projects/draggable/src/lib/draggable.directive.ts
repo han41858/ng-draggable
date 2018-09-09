@@ -99,7 +99,7 @@ export class DraggableDirective implements OnInit {
 					x : startEvent.clientX,
 					y : startEvent.clientY
 				},
-				target : startEvent.target as HTMLElement,
+				target : null,
 				movement : {
 					x : 0,
 					y : 0
@@ -128,7 +128,7 @@ export class DraggableDirective implements OnInit {
 					x : startTouch.clientX,
 					y : startTouch.clientY
 				},
-				target : startTouch.target as HTMLElement,
+				target : null,
 				movement : {
 					x : 0,
 					y : 0
@@ -147,6 +147,9 @@ export class DraggableDirective implements OnInit {
 			}
 		}
 
+		// not startEvent.target, this points DraggableDirective's element node
+		dragEvent.target = this.ele.nativeElement;
+		
 		return dragEvent;
 	}
 
