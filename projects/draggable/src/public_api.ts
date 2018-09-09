@@ -4,6 +4,7 @@
 
 export * from './lib/draggable.module';
 
+export * from './lib/interfaces';
 export * from './lib/draggable.directive';
 export * from './lib/movable.directive';
 export * from './lib/movable-helper.directive';

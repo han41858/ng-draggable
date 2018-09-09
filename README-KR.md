@@ -1,15 +1,19 @@
 # NgDraggable
 
-엘리먼트를 드래그할 수 있는 기능을 제공하는 모듈입니다. 엘리먼트가 드래그 되는 영역을 제한하거나, 다른 엘리먼트 위로 드래그 되었을 때 이벤트를 발생하는 디렉티브도 제공합니다.
+엘리먼트를 드래그할 수 있는 기능을 제공하는 Angular 모듈입니다. 엘리먼트가 드래그 되는 영역을 제한하거나, 다른 엘리먼트 위로 드래그 되었을 때 이벤트를 발생하는 디렉티브도 제공합니다.
+
+[예제](https://stackblitz.com/edit/ng-draggable)
 
 ## 사용방법
 
 1. `ng-draggable-han` 패키지를 설치합니다.
+
 	```
 	yarn add ng-draggable-han
 	```
 
 1. `@NgModule`에 `DraggableModule`을 로드합니다.
+
 	```typescript
     import { DraggableModule } from 'ng-draggable-han';
     
@@ -39,7 +43,7 @@
 
 #### `Position`
 
-좌표를 표현합니다.
+x, y로 이루어진 좌표를 표현합니다.
 
 ```typescript
 interface Position {
@@ -76,7 +80,7 @@ interface DragEvent {
 
 #### `SortEvent`
 
-정렬 이벤트를 표현하며, `SortableAreaDirective`에서 발생합니다.
+정렬 이벤트를 표현하며, `SortableAreaDirective`에서 발생합니다. 정렬 대상은 `MovableDirective` 입니다.
 
 ```typescript
 interface SortEvent {
@@ -96,6 +100,13 @@ interface SortEvent {
 ```
 
 * 프로퍼티
+	- `@Input() ngMovable : boolean` : 드래그에 반응하는 기능을 활성화할지 지정합니다. (기본값 : `true`)
+	
+		```html
+		<div ngDraggable>기본값 : true</div>
+		<div [ngDraggable]="false">비활성화</div>
+		<div [ngDraggable]="someFlag">플래그 값으로 조정</div>
+		```
 
 	- `isDragging : boolean` : 드래그 중인지 표현하는 플래그입니다. CSS 클래스 `dragging`를 적용하는 데에도 사용됩니다.
 
@@ -113,7 +124,7 @@ interface SortEvent {
 
 #### `MovableDirective` (`[ngMovable]`)
 
-MovableDirective는 엘리먼트가 드래그에 반응해서 이동하는 기능을 추가합니다. 하지만 이 디렉티브가 적용된 엘리먼트가 직접 움직이지는 않습니다. 드래그 하는 동안 엘리먼트를 표시하기 위해 MovableHelperDirective를 함께 사용해야 합니다. 
+MovableDirective는 엘리먼트가 드래그에 반응해서 이동하는 기능을 추가합니다. 하지만 이 디렉티브가 적용된 엘리먼트가 직접 움직이지는 않습니다. 드래그 하는 동안 엘리먼트를 표시하기 위해 `MovableHelperDirective`를 함께 사용해야 합니다. 
 
 ```html
 <div class="moveBox" ngMovable>
@@ -124,7 +135,14 @@ MovableDirective는 엘리먼트가 드래그에 반응해서 이동하는 기�
 
 * 프로퍼티
 
-	- `@Input() reset : boolean` : 드래그가 끝난 후 엘리먼트를 원래 위치로 이동할지 지정합니다. (기본값 : true)
+	- `ngMovable : boolean` : 드래그에 반응하는 기능을 활성화할지 지정합니다. (기본값 : `true`)
+	
+		```html
+		<div ngMovable>기본값 : true</div>
+		<div [ngMovable]="false">비활성화</div>
+		<div [ngMovable]="someFlag">플래그 값으로 조정</div>
+		```
+	- `@Input() reset : boolean` : 드래그가 끝난 후 엘리먼트를 원래 위치로 이동할지 지정합니다. (기본값 : `true`)
 	
 * 메소드
 
