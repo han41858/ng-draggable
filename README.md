@@ -1,6 +1,6 @@
 # NgDraggable
 
-Angular module to drag element. Also provide some directives restricting drag area, emitting sort event while dragging.
+Angular module that provides the ability to drag the element. It also limits the area where the element is dragging, or provides a directive that occurs when it is dragged over other elements.
 
 [한국어](https://github.com/han41858/ng-draggable/blob/master/README-KR.md)
 
@@ -8,13 +8,13 @@ Angular module to drag element. Also provide some directives restricting drag ar
 
 ## Usage
 
-1. install `ng-draggable-han` package.
+1. Install `ng-draggable-han` package.
 
 	```
 	yarn add ng-draggable-han
 	```
 
-1. import `DraggableModule` to `@NgModule`.
+1. Import `DraggableModule` to `@NgModule`.
 
 	```typescript
     import { DraggableModule } from 'ng-draggable-han';
@@ -56,7 +56,7 @@ interface Position {
 
 #### `Boundaries`
 
-Restrict area of elements using `MovableDirective`.
+Use to limit the area where `MobableDirective` can move.
 
 ```typescript
 interface Boundaries {
@@ -96,7 +96,7 @@ interface SortEvent {
 
 #### `DraggableDirective` (`[ngDraggable]`)
 
-Add draggable interaction to element.
+Adds the ability to respond to the drag by the element.
 
 ```html
 <div ngDraggable>react drag event</div>
@@ -128,7 +128,7 @@ Add draggable interaction to element.
 
 #### `MovableDirective` (`[ngMovable]`)
 
-Add draggable interaction & moving element copied. Element added this directives not moving in real. If you want to display moving element, use `MovableHelperDirective` together. 
+The `MovableDirective` adds the ability for the element to move in response to the drag, but the element with this directive does not move directly. You must use `MovebleHelperDirective` to display the element during dragging.
 
 ```html
 <div class="moveBox" ngMovable>
@@ -154,21 +154,29 @@ Add draggable interaction & moving element copied. Element added this directives
 	
 * CSS Classes
 
-	- `dragging` : Added to original/copied element while dragging.
+	- `dragging` : Added to original/replica element during dragging.
 	
-	- `dragSource` : Added to original element while dragging.
+	- `dragSource` : Added to original element during dragging.
 	
-	- `dragDummy` : Added to copied element while dragging.
+	- `dragDummy` : Added to replica element during dragging.
 	
-	> Copied element does not exist in original element / original's parent element. This directive uses `@angular/cdk/overlay`, so, copied element rendered in `<body>` element.
+	> The replication element does not exist in the lower layer of the original element or parent element because it uses `@angular/cdk/overlay`. The replication element is rendered to the `<body>`.
+	
+> tip : `DragEvent` in `DraggableDirective` can also be received in `MovableAreaDirective`. So it's possible to use it as follows.
+
+```html
+<div ngMovableArea (dragEnd)="doSomething()">
+	<div ngMovable></div>
+</div>
+```
 		
 #### `MovableHelperDirective` (`['ngMovableHelper]`)
 
-Display copied element of `MovableDirective` while dragging.
+Use to display replicas on the screen while the `MovableDirective` Element is being dragged.
 
 #### `MovableAreaDirective` (`[ngMovableArea]`)
 
-Restrict area of child `MovableDirective`. `MovableDirective` element can't move out of `MovableAreaDirective`.
+Limits the area where the `MovableDirective` element can move. The `MovableDirective` element cannot be moved out of the `MovableAreaDirective` element.
 
 ```html
 <div class="area" ngMovableArea>
@@ -180,7 +188,7 @@ Restrict area of child `MovableDirective`. `MovableDirective` element can't move
 
 #### `SortableAreaDirective` (`[ngSortableArea]`)
 
-Emit `SortEvent` if one `MovableDirective` moved over another `MovableDirective` element in `SortableAreaDirective`.
+When the `MovableDirective` element moves over another `MovableDirective` element, a `SortEvent` event occurs.
 
 ```html
 <div class="area sortable" ngSortableArea (sort)="sort($event)">

@@ -157,6 +157,14 @@ MovableDirective는 엘리먼트가 드래그에 반응해서 이동하는 기�
 	- `dragDummy` : 드래그 하는 동안 복제 엘리먼트에 지정됩니다.
 	
 	> 복제 엘리먼트는 `@angular/cdk/overlay`를 사용하기 때문에 원래 엘리먼트나 부모 엘리먼트의 하위 계층에 존재하지 않습니다. 복제 엘리먼트는 `<body>`에 렌더링됩니다.
+	
+> tip : `DraggableDirective`에서 발생한 `DragEvent`는 `MovableAreaDirective`에서도 받을 수 있습니다. 그래서 다음과 같이 사용하는 것도 가능합니다.
+
+```html
+<div ngMovableArea (dragEnd)="doSomething()">
+	<div ngMovable></div>
+</div>
+```
 		
 #### `MovableHelperDirective` (`['ngMovableHelper]`)
 
