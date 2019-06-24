@@ -14,7 +14,7 @@ export class MovableDirective extends DraggableDirective {
 		this.isDraggable = value;
 	}
 
-	@ContentChild(MovableHelperDirective) helper : MovableHelperDirective;
+	@ContentChild(MovableHelperDirective, { static : false }) helper : MovableHelperDirective;
 
 	@Input() reset : boolean = true;
 
@@ -32,7 +32,7 @@ export class MovableDirective extends DraggableDirective {
 	@HostBinding('style.transform')
 	get transform () : SafeStyle {
 		return this.sanitizer.bypassSecurityTrustStyle(
-			`translate(${this.position.x}px, ${this.position.y}px)`
+			`translate(${ this.position.x }px, ${ this.position.y }px)`
 		);
 	}
 
@@ -79,8 +79,7 @@ export class MovableDirective extends DraggableDirective {
 				x : 0,
 				y : 0
 			};
-		}
-		else {
+		} else {
 			const restrictedMovement : Position = this.restrictMovement({
 				x : event.movement.x,
 				y : event.movement.y
