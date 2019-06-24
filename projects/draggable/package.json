@@ -1,6 +1,6 @@
 {
 	"name": "ng-draggable-han",
-	"version": "1.0.3",
+	"version": "1.0.4",
 	"author": "han41858@gmail.com",
 	"description": "Angular draggable module",
 	"keywords": [
@@ -18,8 +18,8 @@
 	},
 	"license": "MIT",
 	"peerDependencies": {
-		"@angular/cdk": "^6.4.6",
-		"@angular/common": "^6.0.0-rc.0 || ^6.0.0",
-		"@angular/core": "^6.0.0-rc.0 || ^6.0.0"
+		"@angular/cdk": "^8.0.1",
+		"@angular/common": "^8.0.2",
+		"@angular/core": "^8.0.2"
 	}
 }
