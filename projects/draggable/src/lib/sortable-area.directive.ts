@@ -1,4 +1,4 @@
-import { Directive, ElementRef, EventEmitter, Output } from '@angular/core';
+import { AfterContentInit, Directive, ElementRef, EventEmitter, Output } from '@angular/core';
 
 import { MovableAreaDirective } from './movable-area.directive';
 import { MovableDirective } from './movable.directive';
@@ -7,7 +7,7 @@ import { DragEvent, SortEvent } from './interfaces';
 @Directive({
 	selector : '[ngSortableArea]'
 })
-export class SortableAreaDirective extends MovableAreaDirective {
+export class SortableAreaDirective extends MovableAreaDirective implements AfterContentInit {
 
 	@Output() sort : EventEmitter<SortEvent> = new EventEmitter<SortEvent>();
 

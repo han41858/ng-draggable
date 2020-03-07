@@ -43,7 +43,7 @@ export class MovableDirective extends DraggableDirective {
 	@HostListener('dragStart', ['$event'])
 	private onDragStart (event : DragEvent) {
 		if (!!this.helper) {
-			const scrollingEle : HTMLElement = document['scrollingElement'] ?
+			const scrollingEle : HTMLElement = !!document.scrollingElement ?
 				document.scrollingElement as HTMLElement :
 				document.documentElement;
 
@@ -102,7 +102,7 @@ export class MovableDirective extends DraggableDirective {
 	}
 
 	private restrictMovement (movement : Position) : Position {
-		let newMovement : Position = { ...movement };
+		const newMovement : Position = { ...movement };
 
 		if (this.reset === false && !!this.boundaries) {
 			// boundaries modification

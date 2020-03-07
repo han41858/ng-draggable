@@ -31,8 +31,8 @@ export class MovableHelperDirective {
 
 				overlayContainer.style.position = 'absolute';
 
-				overlayContainer.style.left = `${startPosition.x}px`;
-				overlayContainer.style.top = `${startPosition.y}px`;
+				overlayContainer.style.left = `${ startPosition.x }px`;
+				overlayContainer.style.top = `${ startPosition.y }px`;
 
 				this.rootEle = this.overlayRef.overlayElement;
 				this.setPosition({ x : 0, y : 0 });
@@ -41,10 +41,10 @@ export class MovableHelperDirective {
 
 				const style : CSSStyleDeclaration = getComputedStyle(template);
 
-				if (style['display'] === 'flex') {
+				if (style.display === 'flex') {
 					// set fixed size
-					cloneEle.style.width = style['width'];
-					cloneEle.style.height = style['height'];
+					cloneEle.style.width = style.width;
+					cloneEle.style.height = style.height;
 				}
 
 				const classNames : string[] = cloneEle.className.split(' ');
@@ -58,7 +58,7 @@ export class MovableHelperDirective {
 
 	private setPosition (position : Position) {
 		if (!!this.rootEle) {
-			this.rootEle.style.transform = `translate(${position.x}px, ${position.y}px)`;
+			this.rootEle.style.transform = `translate(${ position.x }px, ${ position.y }px)`;
 		}
 	}
 

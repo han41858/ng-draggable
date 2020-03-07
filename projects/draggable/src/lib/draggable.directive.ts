@@ -115,8 +115,7 @@ export class DraggableDirective implements OnInit {
 				dragEvent.movement.x = currentEventAsMouseEvent.clientX - startEvent.clientX;
 				dragEvent.movement.y = currentEventAsMouseEvent.clientY - startEvent.clientY;
 			}
-		}
-		else {
+		} else {
 			const startTouch : Touch = startEvent.touches.item(0);
 
 			dragEvent = {
@@ -149,7 +148,7 @@ export class DraggableDirective implements OnInit {
 
 		// not startEvent.target, this points DraggableDirective's element node
 		dragEvent.target = this.ele.nativeElement;
-		
+
 		return dragEvent;
 	}
 
