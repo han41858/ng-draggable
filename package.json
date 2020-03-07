@@ -1,10 +1,10 @@
 {
 	"name": "ng-draggable-han",
-	"version": "1.0.4",
+	"version": "1.0.5",
 	"scripts": {
 		"ng": "ng",
 		"build": "ng build",
-		"postbuild": "cp README.md projects/draggable/dist",
+		"postbuild": "cp *.md ./dist/draggable/",
 		"test": "ng test",
 		"lint": "ng lint"
 	},
