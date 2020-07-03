@@ -3,38 +3,84 @@
 	"version": 1,
 	"newProjectRoot": "projects",
 	"projects": {
-		"draggable": {
-			"projectType": "library",
-			"root": "projects/draggable",
-			"sourceRoot": "projects/draggable/src",
-			"prefix": "lib",
+		"draggable-app": {
+			"root": "",
+			"sourceRoot": "src",
+			"projectType": "application",
+			"prefix": "app",
+			"schematics": {},
 			"architect": {
 				"build": {
-					"builder": "@angular-devkit/build-ng-packagr:build",
+					"builder": "@angular-devkit/build-angular:browser",
 					"options": {
-						"tsConfig": "projects/draggable/tsconfig.lib.json",
-						"project": "projects/draggable/ng-package.json"
+						"outputPath": "dist/draggable-app",
+						"index": "src/index.html",
+						"main": "src/main.ts",
+						"polyfills": "src/polyfills.ts",
+						"tsConfig": "src/tsconfig.app.json",
+						"assets": [
+							"src/favicon.ico",
+							"src/assets"
+						],
+						"styles": [
+							"src/styles.css"
+						],
+						"scripts": []
 					},
 					"configurations": {
 						"production": {
-							"tsConfig": "projects/draggable/tsconfig.lib.prod.json"
+							"fileReplacements": [
+								{
+									"replace": "src/environments/environment.ts",
+									"with": "src/environments/environment.prod.ts"
+								}
+							],
+							"optimization": true,
+							"outputHashing": "all",
+							"sourceMap": false,
+							"extractCss": true,
+							"namedChunks": false,
+							"aot": true,
+							"extractLicenses": true,
+							"vendorChunk": false,
+							"buildOptimizer": true
+						}
+					}
+				},
+				"serve": {
+					"builder": "@angular-devkit/build-angular:dev-server",
+					"options": {
+						"browserTarget": "draggable-app:build"
+					},
+					"configurations": {
+						"production": {
+							"browserTarget": "draggable-app:build:production"
 						}
 					}
 				},
 				"test": {
 					"builder": "@angular-devkit/build-angular:karma",
 					"options": {
-						"main": "projects/draggable/src/test.ts",
-						"tsConfig": "projects/draggable/tsconfig.spec.json",
-						"karmaConfig": "projects/draggable/karma.conf.js"
+						"main": "src/test.ts",
+						"polyfills": "src/polyfills.ts",
+						"tsConfig": "src/tsconfig.spec.json",
+						"karmaConfig": "src/karma.conf.js",
+						"styles": [
+							"src/styles.css"
+						],
+						"scripts": [],
+						"assets": [
+							"src/favicon.ico",
+							"src/assets"
+						]
 					}
 				},
 				"lint": {
 					"builder": "@angular-devkit/build-angular:tslint",
 					"options": {
 						"tsConfig": [
-							"projects/draggable/tsconfig.lib.json",
-							"projects/draggable/tsconfig.spec.json"
+							"src/tsconfig.app.json",
+							"src/tsconfig.spec.json"
 						],
 						"exclude": [
 							"**/node_modules/**"

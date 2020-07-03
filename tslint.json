@@ -4,15 +4,25 @@
 		"codelyzer"
 	],
 	"rules": {
+		"align": {
+			"options": [
+				"parameters",
+				"statements"
+			]
+		},
 		"array-type": false,
 		"arrow-parens": false,
+		"arrow-return-shorthand": true,
+		"curly": true,
 		"deprecation": {
 			"severity": "warning"
 		},
+		"eofline": true,
 		"import-blacklist": [
 			true,
 			"rxjs/Rx"
 		],
+		"import-spacing": true,
 		"indent": [
 			true,
 			"tabs"
@@ -63,6 +73,11 @@
 			true,
 			"single"
 		],
+		"semicolon": {
+			"options": [
+				"always"
+			]
+		},
 		"space-before-function-paren": true,
 		"trailing-comma": false,
 		"typedef-whitespace": [
@@ -93,6 +108,16 @@
 		"variable-name": {
 			"options": [
 				"allow-leading-underscore"
+			]
+		},
+		"whitespace": {
+			"options": [
+				"check-branch",
+				"check-decl",
+				"check-operator",
+				"check-separator",
+				"check-type",
+				"check-typecast"
 			]
 		}
 	}
