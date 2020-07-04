@@ -20,9 +20,7 @@ export class DraggableDirective implements OnInit {
 	}
 
 	@Input('ngDraggable') set isDraggable (value : boolean) {
-		if (typeof value === 'boolean') {
-			this._isDraggable = value;
-		}
+		this._isDraggable = value;
 	}
 
 	@Output() dragStart : EventEmitter<DragEvent> = new EventEmitter();

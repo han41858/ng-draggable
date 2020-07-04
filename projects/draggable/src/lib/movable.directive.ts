@@ -104,7 +104,7 @@ export class MovableDirective extends DraggableDirective {
 	private restrictMovement (movement : Position) : Position {
 		const newMovement : Position = { ...movement };
 
-		if (this.reset === false && !!this.boundaries) {
+		if (!this.reset && !!this.boundaries) {
 			// boundaries modification
 			newMovement.x = Math.min(newMovement.x, this.boundaries.maxX);
 			newMovement.x = Math.max(newMovement.x, this.boundaries.minX);
