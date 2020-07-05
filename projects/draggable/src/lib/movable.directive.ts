@@ -10,11 +10,13 @@ import { Boundaries, DragEvent, Position } from './interfaces';
 })
 export class MovableDirective extends DraggableDirective {
 
-	@Input('ngMovable') set isMovable (value : boolean) {
-		this.isDraggable = value;
+	// movable switch, binding by attribute
+	// usage: <div ngMovable>/<div [ngMovable]="true">/<div [ngMovable]="false">
+	@Input('ngMovable') set isMovable (value : boolean | string | undefined) {
+		this.isDraggable = value !== undefined ? value : true;
 	}
 
-	@ContentChild(MovableHelperDirective, { static : false }) helper : MovableHelperDirective;
+	@ContentChild(MovableHelperDirective, { static : false }) helper ! : MovableHelperDirective;
 
 	@Input() reset : boolean = true;
 
@@ -23,7 +25,8 @@ export class MovableDirective extends DraggableDirective {
 		y : 0
 	};
 
-	private boundaries : Boundaries;
+	private boundaries : Boundaries | undefined;
+
 
 	constructor (ele : ElementRef, private sanitizer : DomSanitizer) {
 		super(ele);

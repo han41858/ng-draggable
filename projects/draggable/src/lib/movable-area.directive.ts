@@ -4,25 +4,27 @@ import { Subscription } from 'rxjs';
 
 import { MovableDirective } from './movable.directive';
 
+
 @Directive({
 	selector : '[ngMovableArea]'
 })
 export class MovableAreaDirective implements AfterContentInit {
 
-	@ContentChildren(MovableDirective) movables : QueryList<MovableDirective>;
+	@ContentChildren(MovableDirective) movables : QueryList<MovableDirective> | undefined;
 
 	protected subscriptions : Subscription[] = [];
+
 
 	constructor (protected ele : ElementRef) {
 	}
 
 	ngAfterContentInit () {
-		this.movables.changes.subscribe(() => {
+		this.movables?.changes.subscribe(() => {
 			this.subscriptions.forEach(sub => sub.unsubscribe());
 
 			this.subscriptions = [];
 
-			this.movables.forEach(movable => {
+			this.movables?.forEach(movable => {
 				this.subscriptions.push(
 					movable.dragStart.subscribe(() => {
 						this.setBoundaries(movable);
@@ -31,7 +33,7 @@ export class MovableAreaDirective implements AfterContentInit {
 			});
 		});
 
-		this.movables.notifyOnChanges();
+		this.movables?.notifyOnChanges();
 	}
 
 	setBoundaries (movable : MovableDirective) {

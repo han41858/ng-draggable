@@ -9,8 +9,9 @@ import { Position } from './interfaces';
 })
 export class MovableHelperDirective {
 
-	private overlayRef : OverlayRef;
-	private rootEle : HTMLElement;
+	private overlayRef : OverlayRef | undefined;
+	private rootEle : HTMLElement | undefined;
+
 
 	constructor (
 		private overlay : Overlay,
@@ -68,14 +69,14 @@ export class MovableHelperDirective {
 
 	onDragEnd () {
 		if (!!this.overlayRef) {
-			if (this.overlayRef.hasAttached()) {
+			if (this.overlayRef.hasAttached() && !!this.rootEle) {
 				this.rootEle.innerHTML = '';
 
 				this.overlayRef.detach();
 			}
 
 			this.overlayRef.dispose();
-			this.overlayRef = null;
+			this.overlayRef = undefined;
 		}
 	}
 

@@ -1,9 +1,10 @@
 import { Directive, ElementRef, EventEmitter, HostBinding, Input, OnInit, Output } from '@angular/core';
 
 import { fromEvent, merge, Observable } from 'rxjs';
-import { filter, share, tap, withLatestFrom } from 'rxjs/operators';
+import { filter, tap, withLatestFrom } from 'rxjs/operators';
 
 import { DragEvent } from './interfaces';
+
 
 @Directive({
 	selector : '[ngDraggable]'
@@ -12,15 +13,12 @@ export class DraggableDirective implements OnInit {
 
 	// no 'draggable' attribute for DOM
 
-	// draggable switch, binding by attribute
 	protected _isDraggable : boolean = true;
 
-	get isDraggable () : boolean {
-		return this._isDraggable;
-	}
-
-	@Input('ngDraggable') set isDraggable (value : boolean) {
-		this._isDraggable = value;
+	// draggable switch, binding by attribute
+	// usage: <div ngDraggable>/<div [ngDraggable]="true">/<div [ngDraggable]="false">
+	@Input('ngDraggable') set isDraggable (value : boolean | string | undefined) {
+		this._isDraggable = !(value !== '' && value !== undefined);
 	}
 
 	@Output() dragStart : EventEmitter<DragEvent> = new EventEmitter();
@@ -30,19 +28,20 @@ export class DraggableDirective implements OnInit {
 	// set css class
 	@HostBinding('class.dragging') isDragging : boolean = false;
 
+
 	constructor (protected ele : ElementRef) {
 	}
 
 	ngOnInit () {
 		// for desktop
-		const mouseDown$ : Observable<MouseEvent> = fromEvent(this.ele.nativeElement, 'mousedown').pipe(share<MouseEvent>());
-		const mouseMove$ : Observable<MouseEvent> = fromEvent(document, 'mousemove').pipe(share<MouseEvent>());
-		const mouseUp$ : Observable<MouseEvent> = fromEvent(document, 'mouseup').pipe(share<MouseEvent>());
+		const mouseDown$ : Observable<MouseEvent> = fromEvent<MouseEvent>(this.ele.nativeElement, 'mousedown');
+		const mouseMove$ : Observable<MouseEvent> = fromEvent<MouseEvent>(document, 'mousemove');
+		const mouseUp$ : Observable<MouseEvent> = fromEvent<MouseEvent>(document, 'mouseup');
 
 		// for mobile
-		const touchStart$ : Observable<TouchEvent> = fromEvent(this.ele.nativeElement, 'touchstart').pipe(share<TouchEvent>());
-		const touchMove$ : Observable<TouchEvent> = fromEvent(document, 'touchmove').pipe(share<TouchEvent>());
-		const touchEnd$ : Observable<TouchEvent> = fromEvent(document, 'touchend').pipe(share<TouchEvent>());
+		const touchStart$ : Observable<TouchEvent> = fromEvent<TouchEvent>(this.ele.nativeElement, 'touchstart');
+		const touchMove$ : Observable<TouchEvent> = fromEvent<TouchEvent>(document, 'touchmove');
+		const touchEnd$ : Observable<TouchEvent> = fromEvent<TouchEvent>(document, 'touchend');
 
 		merge(mouseMove$, touchMove$)
 			.pipe(
@@ -50,7 +49,7 @@ export class DraggableDirective implements OnInit {
 				withLatestFrom(
 					merge(mouseDown$, touchStart$)
 						.pipe(
-							filter(() => this.isDraggable),
+							filter(() => this._isDraggable),
 							tap((event : MouseEvent | TouchEvent) => {
 								this.isDragging = true;
 
@@ -97,7 +96,7 @@ export class DraggableDirective implements OnInit {
 					x : startEvent.clientX,
 					y : startEvent.clientY
 				},
-				target : null,
+				target : this.ele.nativeElement, // not startEvent.target, this points DraggableDirective's element node
 				movement : {
 					x : 0,
 					y : 0
@@ -114,7 +113,7 @@ export class DraggableDirective implements OnInit {
 				dragEvent.movement.y = currentEventAsMouseEvent.clientY - startEvent.clientY;
 			}
 		} else {
-			const startTouch : Touch = startEvent.touches.item(0);
+			const startTouch : Touch = startEvent.touches.item(0) as Touch;
 
 			dragEvent = {
 				start : {
@@ -125,7 +124,7 @@ export class DraggableDirective implements OnInit {
 					x : startTouch.clientX,
 					y : startTouch.clientY
 				},
-				target : null,
+				target : this.ele.nativeElement, // not startEvent.target, this points DraggableDirective's element node
 				movement : {
 					x : 0,
 					y : 0
@@ -134,7 +133,7 @@ export class DraggableDirective implements OnInit {
 
 			if (!!currentEvent) {
 				const currentEventAsTouchEvent : TouchEvent = currentEvent as TouchEvent;
-				const currentTouch : Touch = currentEventAsTouchEvent.changedTouches.item(0);
+				const currentTouch : Touch = currentEventAsTouchEvent.changedTouches.item(0) as Touch;
 
 				dragEvent.current.x = currentTouch.clientX;
 				dragEvent.current.y = currentTouch.clientY;
@@ -143,9 +142,6 @@ export class DraggableDirective implements OnInit {
 				dragEvent.movement.y = currentTouch.clientY - startTouch.clientY;
 			}
 		}
-
-		// not startEvent.target, this points DraggableDirective's element node
-		dragEvent.target = this.ele.nativeElement;
 
 		return dragEvent;
 	}
